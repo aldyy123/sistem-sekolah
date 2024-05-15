@@ -15,8 +15,8 @@ class CreateActivityResultsTable extends Migration
     {
         Schema::create('activity_results', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('activity_id')->index();
-            $table->uuid('student_id')->index();
+            $table->foreignUuid('activity_id')->index()->references('id')->on('activities')->cascadeOnDelete();
+            $table->foreignUuid('student_id')->index()->references('id')->on('users')->cascadeOnDelete();
             $table->integer('score');
             $table->jsonb('answers');
             $table->timestamps();

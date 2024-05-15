@@ -15,7 +15,7 @@ class CreateQuestionsTable extends Migration
     {
         Schema::create('questions', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('activity_id')->index();
+            $table->foreignUuid('activity_id')->index()->references('id')->on('activities')->cascadeOnDelete();
             $table->string('question');
             $table->jsonb('choices');
             $table->string('answer');

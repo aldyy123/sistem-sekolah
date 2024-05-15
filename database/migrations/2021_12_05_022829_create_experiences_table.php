@@ -15,7 +15,7 @@ class CreateExperiencesTable extends Migration
     {
         Schema::create('experiences', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('user_id')->index();
+            $table->foreignUuid('user_id')->index()->constrained('users')->cascadeOnDelete();
             $table->integer('experience_point');
             $table->integer('level');
             $table->timestamps();

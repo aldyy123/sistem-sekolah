@@ -14,7 +14,7 @@ class AddSchoolIdToExperiences extends Migration
     public function up()
     {
         Schema::table('experiences', function (Blueprint $table) {
-            $table->uuid('school_id')->index();
+            $table->foreignUuid('school_id')->index()->constrained('schools')->cascadeOnDelete();
             $table->smallInteger('grade');
         });
     }

@@ -27,7 +27,7 @@ class UserFactory extends Factory
 
         return [
             'id' => $this->faker->uuid(),
-            'school_id' => School::factory()->create()->id,
+            // 'school_id' => School::factory()->create()->id,
             'name' => $name,
             'username' => $username,
             'password' => Hash::make($username),

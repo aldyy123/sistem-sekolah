@@ -16,7 +16,6 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->uuid('id')->primary()->default(DB::raw('(UUID())'));
-            $table->foreignUuid('school_id')->constrained('schools')->cascadeOnDelete();
             $table->string('name');
             $table->string('username')->unique();
             $table->string('password');

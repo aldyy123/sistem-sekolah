@@ -11,7 +11,7 @@ use Ramsey\Uuid\Uuid;
 
 class ActivityService{
 
-    public function index($schoolId,  $filter = [])
+    public function index($filter = [])
     {
         $orderBy = $filter['order_by'] ?? 'DESC';
         $per_page = $filter['per_page'] ?? 99;
@@ -20,7 +20,6 @@ class ActivityService{
         $status = $filter['status'] ?? null;
         $type = $filter['type'] ?? null;
 
-        School::findOrFail($schoolId);
 
         $query = Activity::orderBy('created_at', $orderBy);
 
@@ -45,17 +44,15 @@ class ActivityService{
         return $activities->toArray();
     }
 
-    public function detail($schoolId, $activityId)
+    public function detail($activityId)
     {
-        School::findOrFail($schoolId);
         $activity = Activity::findOrFail($activityId);
 
         return $activity->toArray();
     }
 
-    public function create($schoolId, $topicId, $payload)
+    public function create($topicId, $payload)
     {
-        School::findOrFail($schoolId);
         Topic::findOrFail($topicId);
 
         $activity = new Activity;
@@ -67,9 +64,8 @@ class ActivityService{
         return $activity->toArray();
     }
 
-    public function update($schoolId, $topicId, $activityId, $payload)
+    public function update($topicId, $activityId, $payload)
     {
-        School::findOrFail($schoolId);
         Topic::findOrFail($topicId);
 
         $activity = Activity::findOrFail($activityId);

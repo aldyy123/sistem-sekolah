@@ -17,10 +17,9 @@ class UserController extends Controller
         $userService = new UserService;
         $experienceDB = new ExperienceService;
 
-        $schoolId = Auth::user()->school_id;
         $userId = Auth::user()->id;
 
-        $user = $userService->detail($schoolId, $userId);
+        $user = $userService->detail($userId);
 
         $pw_matches = Session::get('pw_matches') ?? 0;
 
@@ -28,7 +27,7 @@ class UserController extends Controller
 
         // Admin Dashboard
         if ($user['role'] === 'ADMIN') {
-            $users = $userService->index($schoolId)['data'];
+            $users = $userService->index()['data'];
             return view('admin.dashboard', compact('users', 'pw_matches'));
         }
 
@@ -43,7 +42,7 @@ class UserController extends Controller
             $experience = Auth::user()->experience;
 
             if ($experience === null) {
-                $experienceDB->create($schoolId, $userId, ['grade' => Auth::user()->grade ?? null, 'experience_point' => 0, 'level' => 0]);
+                $experienceDB->create($userId, ['grade' => Auth::user()->grade ?? null, 'experience_point' => 0, 'level' => 0]);
                 $experience = Auth::user()->experience;
             }
 

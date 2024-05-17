@@ -16,7 +16,7 @@ class SubjectFactory extends Factory
     {
         return [
             'id' => $this->faker->uuid(),
-            'school_id' => School::factory()->create()->id,
+            // 'school_id' => School::factory()->create()->id,
             'name' => $this->faker->colorName(),
         ];
     }

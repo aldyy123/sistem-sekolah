@@ -15,7 +15,6 @@ class CreateSubjectsTable extends Migration
     {
         Schema::create('subjects', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('school_id')->index()->references('id')->on('schools')->cascadeOnDelete();
             $table->string('name');
             $table->timestamps();
         });

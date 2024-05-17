@@ -10,7 +10,7 @@ use Ramsey\Uuid\Uuid;
 
 class ExperienceService
 {
-    public function index($schoolId,  $filter = [])
+    public function index($filter = [])
     {
         $orderBy = $filter['order_by'] ?? 'DESC';
         $per_page = $filter['per_page'] ?? 999;
@@ -19,9 +19,8 @@ class ExperienceService
         $user_id = $filter['student_id'] ?? null;
         $grade = $filter['grade'] ?? null;
 
-        School::findOrFail($schoolId);
 
-        $query = Experience::where('school_id', $schoolId);
+        $query = Experience::all();
 
         if($by_xp) {
             $query->orderBy('experience_point', $orderBy);
@@ -46,22 +45,19 @@ class ExperienceService
         return $experiences->toArray();
     }
 
-    public function detail($schoolId, $experienceId)
+    public function detail($experienceId)
     {
-        School::findOrFail($schoolId);
         $experience = Experience::findOrFail($experienceId);
 
         return $experience->toArray();
     }
 
-    public function create($schoolId,$userId, $payload)
+    public function create($userId, $payload)
     {
-        School::findOrFail($schoolId);
         User::findOrFail($userId);
 
         $experience = new Experience;
         $experience->id = Uuid::uuid4()->toString();
-        $experience->school_id = $schoolId;
         $experience->user_id = $userId;
         $experience = $this->fill($experience, $payload);
         $experience->save();
@@ -69,9 +65,8 @@ class ExperienceService
         return $experience->toArray();
     }
 
-    public function update($schoolId, $userId, $experienceId, $payload)
+    public function update($userId, $experienceId, $payload)
     {
-        School::findOrFail($schoolId);
         User::findOrFail($userId);
         $experience = Experience::findOrFail($experienceId);
 

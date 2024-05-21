@@ -15,8 +15,8 @@ class CreateTopicsTable extends Migration
     {
         Schema::create('topics', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('course_id')->index();
-            $table->uuid('subject_id')->index();
+            $table->foreignUuid('course_id')->index()->references('id')->on('courses')->cascadeOnDelete();
+            $table->foreignUuid('subject_id')->index()->references('id')->on('subjects')->cascadeOnDelete();
             $table->string('name');
             $table->unsignedInteger('order');
             $table->timestamps();

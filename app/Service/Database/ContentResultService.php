@@ -10,13 +10,12 @@ use Illuminate\Support\Facades\Validator;
 use Ramsey\Uuid\Uuid;
 
 class ContentResultService{
-    public function index($schoolId,  $filter = []) {
+    public function index($filter = []) {
         $orderBy = $filter['order_by'] ?? 'DESC';
         $per_page = $filter['per_page'] ?? 99;
         $content_id = $filter['content_id'] ?? null;
         $student_id = $filter['student_id'] ?? null;
 
-        School::findOrFail($schoolId);
 
         $query = ContentResult::orderBy('created_at', $orderBy);
 
@@ -33,17 +32,15 @@ class ContentResultService{
         return $contentResults->toArray();
     }
 
-    public function detail($schoolId, $contentResultId)
+    public function detail( $contentResultId)
     {
-        School::findOrFail($schoolId);
         $contentResult = ContentResult::findOrFail($contentResultId);
 
         return $contentResult->toArray();
     }
 
-    public function create($schoolId, $contentId, $studentId, $payload)
+    public function create($contentId, $studentId, $payload)
     {
-        School::findOrFail($schoolId);
         Content::findOrFail($contentId);
         User::findOrFail($studentId);
 
@@ -58,14 +55,12 @@ class ContentResultService{
     }
 
     public function update(
-        $schoolId,
         $contentId,
         $studentId,
         $contentResultId,
         $payload
     )
     {
-        School::findOrFail($schoolId);
         Content::findOrFail($contentId);
         User::findOrFail($studentId);
 

@@ -10,7 +10,7 @@ use Ramsey\Uuid\Uuid;
 
 class CourseService{
 
-    public function index($schoolId, $filter = [])
+    public function index($filter = [])
     {
         $orderBy = $filter['order_by'] ?? 'DESC';
         $per_page = $filter['per_page'] ?? 99;
@@ -19,7 +19,6 @@ class CourseService{
         $subjectId = $filter['subject_id'] ?? null;
         $createdBy = $filter['created_by'] ?? null;
 
-        School::findOrFail($schoolId);
 
         $query = Course::orderBy('created_at', $orderBy);
         if ($byGrade === 1) {
@@ -43,17 +42,15 @@ class CourseService{
         return $courses->toArray();
     }
 
-    public function detail($schoolId, $courseId)
+    public function detail($courseId)
     {
-        School::findOrFail($schoolId);
         $course = Course::findOrFail($courseId);
 
         return $course->toArray();
     }
 
-    public function create($schoolId, $subjectId, $payload)
+    public function create($subjectId, $payload)
     {
-        School::findOrFail($schoolId);
         Subject::findOrFail($subjectId);
 
         $course = new Course;
@@ -65,9 +62,8 @@ class CourseService{
         return $course->toArray();
     }
 
-    public function update($schoolId, $subjectId, $courseId, $payload)
+    public function update($subjectId, $courseId, $payload)
     {
-        School::findOrFail($schoolId);
         Subject::findOrFail($subjectId);
 
         $course = Course::findOrFail($subjectId);

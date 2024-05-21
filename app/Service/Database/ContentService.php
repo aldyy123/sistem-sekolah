@@ -11,7 +11,7 @@ use Ramsey\Uuid\Uuid;
 
 class ContentService{
 
-    public function index($schoolId,  $filter = [])
+    public function index($filter = [])
     {
         $orderBy = $filter['order_by'] ?? 'DESC';
         $per_page = $filter['per_page'] ?? 99;
@@ -19,7 +19,6 @@ class ContentService{
         $topicId = $filter['topic_id'] ?? null;
         $status = $filter['status'] ?? null;
 
-        School::findOrFail($schoolId);
 
         $query = Content::orderBy('created_at', $orderBy);
 
@@ -40,17 +39,15 @@ class ContentService{
         return $contents->toArray();
     }
 
-    public function detail($schoolId, $contentId)
+    public function detail($contentId)
     {
-        School::findOrFail($schoolId);
         $content = Content::findOrFail($contentId);
 
         return $content->toArray();
     }
 
-    public function create($schoolId, $topicId, $payload)
+    public function create($topicId, $payload)
     {
-        School::findOrFail($schoolId);
         Topic::findOrFail($topicId);
 
         $content = new Content;
@@ -62,9 +59,8 @@ class ContentService{
         return $content->toArray();
     }
 
-    public function update($schoolId, $topicId, $contentId, $payload)
+    public function update($topicId, $contentId, $payload)
     {
-        School::findOrFail($schoolId);
         Topic::findOrFail($topicId);
 
         $content = Content::findOrFail($contentId);

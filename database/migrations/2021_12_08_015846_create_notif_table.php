@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateNotifTable extends Migration
@@ -14,8 +15,9 @@ class CreateNotifTable extends Migration
     public function up()
     {
         Schema::create('notif', function (Blueprint $table) {
-            $table->uuid('student_id');
-            $table->uuid('teacher_id');
+            $table->uuid('id')->primary();
+            $table->foreignUuid('student_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignUuid('teacher_id')->constrained('users')->cascadeOnDelete();
             $table->string('title');
             $table->string('message');
             $table->timestamps();

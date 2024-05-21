@@ -23,7 +23,7 @@ class ManageAccountController extends Controller
 
         $schoolId = Auth::user()->school_id;
 
-        $accounts = $userDB->index($schoolId, ['role' => $request->role]);
+        $accounts = $userDB->index(['role' => $request->role]);
 
         return response()->json($accounts);
     }

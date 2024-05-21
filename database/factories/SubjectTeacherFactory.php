@@ -16,15 +16,15 @@ class SubjectTeacherFactory extends Factory
      */
     public function definition()
     {
-        $schoolId = School::factory()->create()->id;
+        // $schoolId = School::factory()->create()->id;
 
         return [
             'id' => $this->faker->uuid(),
             'subject_id' => Subject::factory()->create()->id,
             'teachers' => [
-                User::factory(['school_id' => $schoolId])->create()->id,
-                User::factory(['school_id' => $schoolId])->create()->id,
-                User::factory(['school_id' => $schoolId])->create()->id,
+                User::factory()->create()->id,
+                User::factory()->create()->id,
+                User::factory()->create()->id,
             ]
         ];
     }

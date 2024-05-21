@@ -9,18 +9,16 @@ use Ramsey\Uuid\Uuid;
 
 class SubjectService{
 
-    public function index($schoolId, $filter = [])
+    public function index($filter = [])
     {
         $orderBy = $filter['order_by'] ?? 'DESC';
         $per_page = $filter['per_page'] ?? 20;
         $name = $filter['name'] ?? null;
         $relation = $filter['with_subject_teacher'] ?? false;
 
-        School::findOrFail($schoolId);
 
         $query = Subject::orderBy('created_at', $orderBy);
 
-        $query->where('school_id', $schoolId);
 
         if ($name !== null) {
             $query->where('name', $name);
@@ -35,30 +33,26 @@ class SubjectService{
         return $subjects->toArray();
     }
 
-    public function detail($schoolId, $subjectId)
+    public function detail($subjectId)
     {
-        School::findOrFail($schoolId);
         $subject = Subject::findOrFail($subjectId);
 
         return $subject->toArray();
     }
 
-    public function create($schoolId, $payload)
+    public function create($payload)
     {
-        School::findOrFail($schoolId);
 
         $subject = new Subject;
         $subject->id = Uuid::uuid4()->toString();
-        $subject->school_id = $schoolId;
         $subject = $this->fill($subject, $payload);
         $subject->save();
 
         return $subject->toArray();
     }
 
-    public function update($schoolId, $subjectId, $payload)
+    public function update($subjectId, $payload)
     {
-        School::findOrFail($schoolId);
         $subject = Subject::findOrFail($subjectId);
         $subject = $this->fill($subject, $payload);
         $subject->save();

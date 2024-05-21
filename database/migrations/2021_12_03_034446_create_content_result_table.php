@@ -15,8 +15,8 @@ class CreateContentResultTable extends Migration
     {
         Schema::create('content_result', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('content_id')->index();
-            $table->uuid('student_id')->index();
+            $table->foreignUuid('content_id')->index()->references('id')->on('contents')->cascadeOnDelete();
+            $table->foreignUuid('student_id')->index()->references('id')->on('users')->cascadeOnDelete();
             $table->boolean('status');
             $table->timestamps();
         });

@@ -15,7 +15,7 @@ class CreateActivitiesTable extends Migration
     {
         Schema::create('activities', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('topic_id')->index();
+            $table->foreignUuid('topic_id')->index()->references('id')->on('topics')->cascadeOnDelete();
             $table->string('name');
             $table->string('description');
             $table->string('status');

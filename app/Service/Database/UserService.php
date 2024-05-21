@@ -11,7 +11,7 @@ use Ramsey\Uuid\Uuid;
 
 class UserService {
 
-    public function index($schoolId, $filter = [])
+    public function index($filter = [])
     {
         $orderBy = $filter['order_by'] ?? 'DESC';
         $per_page = $filter['per_page'] ?? 999;
@@ -20,11 +20,9 @@ class UserService {
         $grade = $filter['grade'] ?? null;
         $with_experience = $filter['with_experience'] ?? null;
 
-        School::findOrFail($schoolId);
 
         $query = User::orderBy('created_at', $orderBy);
 
-        $query->where('school_id', $schoolId);
 
         if ($role !== null) {
             $query->where('role', $role);
@@ -47,29 +45,26 @@ class UserService {
         return $users->toArray();
     }
 
-    public function detail($schoolId, $userId)
+    public function detail($userId)
     {
-        School::findOrFail($schoolId);
         $user = User::findOrFail($userId);
 
         return $user->toArray();
     }
 
-    public function bulkDetail($schoolId, $userIds){
-        $query = User::where('school_id', $schoolId)->whereIn('id', $userIds);
+    public function bulkDetail($userIds){
+        $query = User::where('id', $userIds);
 
         $users = $query->simplePaginate(20);
 
         return $users->toArray();
     }
 
-    public function create($schoolId, $payload)
+    public function create($payload)
     {
-        School::findOrFail($schoolId);
 
         $user = new User;
         $user->id = Uuid::uuid4()->toString();
-        $user->school_id = $schoolId;
         $user = $this->fill($user, $payload);
         $user->password = Hash::make($user->password);
         $user->save();
@@ -77,9 +72,8 @@ class UserService {
         return $user;
     }
 
-    public function update($schoolId, $userId, $payload)
+    public function update($userId, $payload)
     {
-        School::findOrFail($schoolId);
         $user = User::findOrFail($userId);
         $user = $this->fill($user, $payload);
         $user->password = Hash::make($user->password);

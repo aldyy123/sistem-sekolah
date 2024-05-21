@@ -18,24 +18,22 @@ class CourseController extends Controller
         $subjectTeacherDB = new SubjectTeacherService;
         $subjectDB = new SubjectService;
 
-        $schoolId = Auth::user()->school_id;
         $teacherId = Auth::user()->id;
 
-        $teacherSubject = $subjectTeacherDB->index($schoolId,
-        ['teacher_id' => $teacherId])->toArray();
+        $teacherSubject = $subjectTeacherDB->index(['teacher_id' => $teacherId])->toArray();
 
         $subjectIds = collect($teacherSubject['data'])->pluck('subject_id');
 
         $subjects = [];
         foreach ($subjectIds as $key => $subjectId) {
-            $dataSubject = $subjectDB->detail($schoolId, $subjectId);
-            
+            $dataSubject = $subjectDB->detail($subjectId);
+
             $subjects[$key] = $dataSubject;
         }
-        
+
         $subject = collect($subjects)
         ->firstWhere('id', $request->subject_id) ?? null;
-        
+
         return view('teacher.subject', compact('subject', 'subjects'))
         ->with('grades', config('constant.grades'));
     }
@@ -44,17 +42,14 @@ class CourseController extends Controller
         $coruseDB = new CourseService;
         $subjectDB = new SubjectService;
 
-        $schoolId = Auth::user()->school_id;
-
-        $course = $coruseDB->detail($schoolId, $request->course_id);
-        $subject = $subjectDB->detail($schoolId, $request->subject_id);
-        $courses = $coruseDB->index($schoolId,
-            [
+        $course = $coruseDB->detail($request->course_id);
+        $subject = $subjectDB->detail($request->subject_id);
+        $courses = $coruseDB->index([
                 'subject_id' => $request->subject_id,
                 'by_grade' => 1,
             ]
         )['data'];
-        
+
         return view('teacher.course', compact('courses', 'subject', 'course'));
     }
 
@@ -62,12 +57,10 @@ class CourseController extends Controller
         $subjectTeacherDB = new SubjectTeacherService;
         $coruseDB = new CourseService;
         $subjectDB = new SubjectService;
-        
-        $schoolId = Auth::user()->school_id;
+
 
         if ($request->subject_id !== null) {
-            $courses = $coruseDB->index($schoolId,
-                [
+            $courses = $coruseDB->index([
                     'subject_id' => $request->subject_id,
                     'by_grade' => 1,
                 ]
@@ -75,37 +68,36 @@ class CourseController extends Controller
             $courses['total'] = count($courses['data']);
             return response()->json($courses);
         } else {
-            $teacherSubject = $subjectTeacherDB->index($schoolId,
-            ['teacher_id' => $request->teacher_id])->toArray();
-    
+            $teacherSubject = $subjectTeacherDB->index(['teacher_id' => $request->teacher_id])->toArray();
+
             $subjectIds = collect($teacherSubject['data'])->pluck('subject_id');
-            
+
             $subjects = [];
             foreach ($subjectIds as $key => $subjectId) {
-                $dataSubject = $subjectDB->detail($schoolId, $subjectId);
-                $dataCourse = $coruseDB->index($schoolId, [
+                $dataSubject = $subjectDB->detail($subjectId);
+                $dataCourse = $coruseDB->index([
                     'subject_id' => $subjectId,
                     'by_grade' => 1,
                 ])['data'];
-                
+
                 $subjects[$key] = $dataSubject;
                 $subjects[$key]['courses'] = $dataCourse;
                 $subjects[$key]['count_course'] = count($dataCourse);
             }
-    
+
             return response()->json($subjects);
         }
-        
+
 
     }
 
     public function createCourse(Request $request) {
         $coruseDB = new CourseService;
-        $schoolId = Auth::user()->school_id;
         $userId = Auth::user()->id;
 
+
         return response()->json($coruseDB->create
-        ($schoolId, $request->subject_id,
+        ($request->subject_id,
             [
                 'description' => $request->name,
                 'grade' => $request->grade,
@@ -117,9 +109,7 @@ class CourseController extends Controller
     public function getCourseTopic(Request $request) {
         $topicDB = new TopicService;
 
-        $schoolId = Auth::user()->school_id;
-
-        $topics = $topicDB->index($schoolId, [
+        $topics = $topicDB->index([
             'subject_id' => $request->subject_id,
             'course_id' => $request->course_id,
         ]);
@@ -133,7 +123,7 @@ class CourseController extends Controller
         $topicDB = new TopicService;
         $user = Auth::user();
 
-        $topicLastOrder = $topicDB->index($user->school_id, [
+        $topicLastOrder = $topicDB->index([
             'order_by' => 'DESC',
             'per_page' => 1,
         ])['data'];
@@ -141,7 +131,6 @@ class CourseController extends Controller
         $total = $topicLastOrder[0]['order'] ?? 0;
 
         return response()->json($topicDB->create(
-            $user->school_id,
             $request->subject_id,
             $request->course_id,
             [

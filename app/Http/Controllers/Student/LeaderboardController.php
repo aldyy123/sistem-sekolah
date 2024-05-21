@@ -24,7 +24,7 @@ class LeaderboardController extends Controller
             'order_by_xp' => true,
         ];
 
-        $users = $experienceService->index($user->school_id, $filter)['data'];
+        $users = $experienceService->index($filter)['data'];
         $schoolDetail = $schoolService->detail($user->school_id);
         $rankOrder = 1;
         $currentUserRank = 0;

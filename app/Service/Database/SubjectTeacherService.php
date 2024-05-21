@@ -9,16 +9,15 @@ use Illuminate\Support\Facades\Validator;
 use Ramsey\Uuid\Uuid;
 
 class SubjectTeacherService {
-    public function index($schoolId, $filter = [])
+    public function index($filter = [])
     {
         $orderBy = $filter['order_by'] ?? 'DESC';
         $per_page = $filter['per_page'] ?? 99;
         $teacherId = $filter['teacher_id'] ?? null;
 
-        School::findOrFail($schoolId);
 
         $query = SubjectTeacher::orderBy('created_at', $orderBy);
-        
+
         if ($teacherId !== null) {
             $query->whereJsonContains('teachers', $teacherId);
         }
@@ -28,17 +27,15 @@ class SubjectTeacherService {
         return $users;
     }
 
-    public function detail($schoolId, $subjectTeacherId)
+    public function detail($subjectTeacherId)
     {
-        School::findOrFail($schoolId);
         $subject = SubjectTeacher::findOrFail($subjectTeacherId);
 
         return $subject;
     }
 
-    public function create($schoolId, $payload)
+    public function create($payload)
     {
-        School::findOrFail($schoolId);
 
         $subject = new SubjectTeacher();
         $subject->id = Uuid::uuid4()->toString();
@@ -48,9 +45,8 @@ class SubjectTeacherService {
         return $subject;
     }
 
-    public function update($schoolId, $subjectTeacherId, $payload)
+    public function update($subjectTeacherId, $payload)
     {
-        School::findOrFail($schoolId);
         $subject = SubjectTeacher::findOrFail($subjectTeacherId);
         $subject = $this->fill($subject, $payload);
         $subject->save();

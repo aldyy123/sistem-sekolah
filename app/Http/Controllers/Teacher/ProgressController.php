@@ -16,8 +16,6 @@ use App\Service\Database\TopicService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Service\Database\UserService;
-use Illuminate\Support\Facades\DB;
-use Ramsey\Uuid\Uuid;
 
 class ProgressController extends Controller
 {
@@ -25,25 +23,23 @@ class ProgressController extends Controller
     {
         $userService = new UserService;
 
-        $schoolId = Auth::user()->school_id;
         $userId = Auth::user()->id;
 
-        $user = $userService->detail($schoolId, $userId);
+        $user = $userService->detail($userId);
         return view('teacher.progress.index', compact('user'));
     }
 
     public function detailProgress(Request $request)
     {
-        $coruseDB = new CourseService;
+        $courseDB = new CourseService;
         $subjectDB = new SubjectService;
         $studentDB = new UserService;
         $topicDB = new TopicService;
 
-        $schoolId = Auth::user()->school_id;
 
-        $course = $coruseDB->detail($schoolId, $request->course_id);
-        $subject = $subjectDB->detail($schoolId, $request->subject_id);
-        $topic = $topicDB->detail($schoolId, $request->topic_id);
+        $course = $courseDB->detail($request->course_id);
+        $subject = $subjectDB->detail($request->subject_id);
+        $topic = $topicDB->detail($request->topic_id);
         $topics =  Topic::where([
             ['subject_id', '=', $request->subject_id],
             ['course_id', '=', $request->course_id],
@@ -59,8 +55,8 @@ class ProgressController extends Controller
             $totalActivity = count($activitiesDB);
             for ($i=0; $i < $totalActivity; $i++) {
                 $activityResults = ActivityResult::where('activity_id', '=', $activitiesDB[$i]['id'])->get();
-                for ($a=0; $a < count($activityResults); $a++) { 
-                    $student = $studentDB->detail($schoolId, $activityResults[$a]['student_id']);
+                for ($a=0; $a < count($activityResults); $a++) {
+                    $student = $studentDB->detail($activityResults[$a]['student_id']);
                     $activityName = Activity::where('id', '=', $activityResults[$a]['activity_id'])->value('name');
                     $activityResults[$a]['student_name'] = $student['name'];
                     $activityResults[$a]['student_email'] = $student['email'];
@@ -81,7 +77,7 @@ class ProgressController extends Controller
             for ($i = 0; $i < $totalContent; $i++) {
                 $contentResults = ContentResult::where('content_id', '=', $contentsDB[$i]['id'])->get();
                 for ($a = 0; $a < count($contentResults); $a++) {
-                    $student = $studentDB->detail($schoolId, $contentResults[$a]['student_id']);
+                    $student = $studentDB->detail($contentResults[$a]['student_id']);
                     $contentName = Content::where('id', '=', $contentResults[$a]['content_id'])->value('name');
                     $contentResults[$a]['student_name'] = $student['name'];
                     $contentResults[$a]['student_email'] = $student['email'];
@@ -105,7 +101,7 @@ class ProgressController extends Controller
             for ($i = 0; $i < $totalExam; $i++) {
                 $examResults = ActivityResult::where('activity_id', '=', $examsDB[$i]['id'])->get();
                 for ($a = 0; $a < count($examResults); $a++) {
-                    $student = $studentDB->detail($schoolId, $examResults[$a]['student_id']);
+                    $student = $studentDB->detail($examResults[$a]['student_id']);
                     $examName = Activity::where('id', '=', $examResults[$a]['activity_id'])->value('name');
                     $examResults[$a]['student_name'] = $student['name'];
                     $examResults[$a]['student_email'] = $student['email'];
@@ -126,19 +122,15 @@ class ProgressController extends Controller
         $subjectTeacherDB = new SubjectTeacherService;
         $subjectDB = new SubjectService;
 
-        $schoolId = Auth::user()->school_id;
         $teacherId = Auth::user()->id;
 
-        $teacherSubject = $subjectTeacherDB->index(
-            $schoolId,
-            ['teacher_id' => $teacherId]
-        )->toArray();
+        $teacherSubject = $subjectTeacherDB->index(['teacher_id' => $teacherId])->toArray();
 
         $subjectIds = collect($teacherSubject['data'])->pluck('subject_id');
 
         $subjects = [];
         foreach ($subjectIds as $key => $subjectId) {
-            $dataSubject = $subjectDB->detail($schoolId, $subjectId);
+            $dataSubject = $subjectDB->detail($subjectId);
 
             $subjects[$key] = $dataSubject;
         }
@@ -157,10 +149,9 @@ class ProgressController extends Controller
 
         $schoolId = Auth::user()->school_id;
 
-        $course = $coruseDB->detail($schoolId, $request->course_id);
-        $subject = $subjectDB->detail($schoolId, $request->subject_id);
+        $course = $coruseDB->detail($request->course_id);
+        $subject = $subjectDB->detail($request->subject_id);
         $courses = $coruseDB->index(
-            $schoolId,
             [
                 'subject_id' => $request->subject_id,
                 'by_grade' => 1,
@@ -180,7 +171,6 @@ class ProgressController extends Controller
 
         if ($request->subject_id !== null) {
             $courses = $coruseDB->index(
-                $schoolId,
                 [
                     'subject_id' => $request->subject_id,
                     'by_grade' => 1,
@@ -190,7 +180,6 @@ class ProgressController extends Controller
             return response()->json($courses);
         } else {
             $teacherSubject = $subjectTeacherDB->index(
-                $schoolId,
                 ['teacher_id' => $request->teacher_id]
             )->toArray();
 
@@ -198,8 +187,8 @@ class ProgressController extends Controller
 
             $subjects = [];
             foreach ($subjectIds as $key => $subjectId) {
-                $dataSubject = $subjectDB->detail($schoolId, $subjectId);
-                $dataCourse = $coruseDB->index($schoolId, [
+                $dataSubject = $subjectDB->detail($subjectId);
+                $dataCourse = $coruseDB->index([
                     'subject_id' => $subjectId,
                     'by_grade' => 1,
                 ])['data'];
@@ -219,7 +208,7 @@ class ProgressController extends Controller
 
         $schoolId = Auth::user()->school_id;
 
-        $topics = $topicDB->index($schoolId, [
+        $topics = $topicDB->index([
             'subject_id' => $request->subject_id,
             'course_id' => $request->course_id,
         ]);
@@ -230,7 +219,7 @@ class ProgressController extends Controller
     }
 
     public function sendNotif($activity_id){
-        
+
         $examsDB = ActivityResult::where(['activity_id'=>$activity_id])->get();
 
         foreach ($examsDB as $key => $value) {
@@ -243,6 +232,6 @@ class ProgressController extends Controller
             $notif->save();
         }
         return redirect()->back();
-        
+
     }
 }

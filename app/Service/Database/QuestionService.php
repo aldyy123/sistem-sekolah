@@ -10,13 +10,12 @@ use Ramsey\Uuid\Uuid;
 
 class QuestionService{
 
-    public function index($schoolId,  $filter = [])
+    public function index($filter = [])
     {
         $orderBy = $filter['order_by'] ?? 'DESC';
         $per_page = $filter['per_page'] ?? 99;
         $activityId = $filter['activity_id'] ?? null;
 
-        School::findOrFail($schoolId);
 
         $query = Question::orderBy('order', $orderBy);
 
@@ -29,17 +28,15 @@ class QuestionService{
         return $questions->toArray();
     }
 
-    public function detail($schoolId, $questionId)
+    public function detail($questionId)
     {
-        School::findOrFail($schoolId);
         $content = Question::findOrFail($questionId);
 
         return $content;
     }
 
-    public function create($schoolId, $activityId, $payload)
+    public function create($activityId, $payload)
     {
-        School::findOrFail($schoolId);
         Activity::findOrFail($activityId);
 
         $question = new Question();
@@ -51,9 +48,8 @@ class QuestionService{
         return $question->toArray();
     }
 
-    public function update($schoolId, $activityId, $questionId, $payload)
+    public function update($activityId, $questionId, $payload)
     {
-        School::findOrFail($schoolId);
         Activity::findOrFail($activityId);
 
         $question = Question::findOrFail($questionId);
@@ -63,9 +59,8 @@ class QuestionService{
         return $question->toArray();
     }
 
-    public function destroy($schoolId, $activityId, $questionId)
+    public function destroy($activityId, $questionId)
     {
-        School::findOrFail($schoolId);
         Activity::findOrFail($activityId);
 
         Question::findOrFail($questionId)->delete();

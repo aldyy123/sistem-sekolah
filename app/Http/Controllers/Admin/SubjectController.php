@@ -14,14 +14,13 @@ class SubjectController extends Controller
     public function index() {
         $subjectService = new SubjectService;
         $userService = new UserService;
-        $schoolId = Auth::user()->school_id;
 
         $filter = [
             'order_by' => 'ASC',
             'with_subject_teacher' => true,
         ];
 
-        $subjects = $subjectService->index($schoolId, $filter);
+        $subjects = $subjectService->index($filter);
 
         $subjectsWithTeacher = [];
         foreach ($subjects['data'] as $subject) {
@@ -29,18 +28,20 @@ class SubjectController extends Controller
                 continue;
             }
 
-            $teachers = $userService->bulkDetail($schoolId, $subject['subject_teacher']['teachers'])['data'];
+            $teachers = $userService->bulkDetail($subject['subject_teacher']['teachers'])['data'];
             $subject['teacher_details'] = $teachers;
             $subject['teacher_details_string'] = collect($teachers)->pluck('name')->join(', ');
             $subjectsWithTeacher[] = $subject;
         }
+
 
         $filter = [
             'per_page' => 99,
             'role' => 'TEACHER',
         ];
 
-        $teachers = $userService->index($schoolId, $filter)['data'];
+        $teachers = $userService->index($filter)['data'];
+
 
         return view('admin.subjects')
             ->with('subjects', $subjectsWithTeacher)
@@ -50,40 +51,37 @@ class SubjectController extends Controller
     public function create(Request $request) {
         $subjectService = new SubjectService;
         $subjectTeacherService = new SubjectTeacherService;
-        $schoolId = Auth::user()->school_id;
 
         $payload = [
             'name' => $request->subject_name,
         ];
 
-        $subject = $subjectService->create($schoolId, $payload);
+        $subject = $subjectService->create($payload);
 
         $payload = [
             'subject_id' => $subject['id'],
             'teachers' => [],
         ];
 
-        $subjectTeacherService->create($schoolId, $payload);
+        $subjectTeacherService->create($payload);
 
         return redirect()->back();
     }
 
     public function update(Request $request) {
         $subjectService = new SubjectService;
-        $schoolId = Auth::user()->school_id;
 
         $payload = [
             'name' => $request->subject_name,
         ];
 
-        $subjectService->update($schoolId, $request->subject_id, $payload);
+        $subjectService->update($request->subject_id, $payload);
 
         return redirect()->back();
     }
 
     public function assign(Request $request) {
         $subjectTeacherService = new SubjectTeacherService;
-        $schoolId = Auth::user()->school_id;
 
         $teachers = collect($request->teacherIds)->unique();
 
@@ -91,7 +89,7 @@ class SubjectController extends Controller
             'teachers' => $teachers->all(),
         ];
 
-        $subjectTeacher = $subjectTeacherService->update($schoolId, $request->subjectTeacherId, $payload);
+        $subjectTeacher = $subjectTeacherService->update($request->subjectTeacherId, $payload);
 
         return $subjectTeacher->toArray();
     }

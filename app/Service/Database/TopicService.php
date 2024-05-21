@@ -11,14 +11,13 @@ use Ramsey\Uuid\Uuid;
 
 class TopicService{
 
-    public function index($schoolId, $filter = [])
+    public function index($filter = [])
     {
         $orderBy = $filter['order_by'] ?? 'DESC';
         $per_page = $filter['per_page'] ?? 20;
         $subjectId = $filter['subject_id'] ?? null;
         $courseId = $filter['course_id'] ?? null;
 
-        School::findOrFail($schoolId);
 
         $query = Topic::orderBy('order', $orderBy);
 
@@ -35,17 +34,15 @@ class TopicService{
         return $topics->toArray();
     }
 
-    public function detail($schoolId, $topicId)
+    public function detail($topicId)
     {
-        School::findOrFail($schoolId);
         $subject = Topic::findOrFail($topicId);
 
         return $subject->toArray();
     }
 
-    public function create($schoolId, $subjectId, $courseId, $payload)
+    public function create($subjectId, $courseId, $payload)
     {
-        School::findOrFail($schoolId);
         Subject::findOrFail($subjectId);
         Course::findOrFail($courseId);
 
@@ -59,9 +56,8 @@ class TopicService{
         return $topic->toArray();
     }
 
-    public function update($schoolId, $subjectId, $courseId, $topicId, $payload)
+    public function update($subjectId, $courseId, $topicId, $payload)
     {
-        School::findOrFail($schoolId);
         Subject::findOrFail($subjectId);
         Course::findOrFail($courseId);
 

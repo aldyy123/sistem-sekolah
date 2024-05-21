@@ -15,7 +15,7 @@ class CreateContentsTable extends Migration
     {
         Schema::create('contents', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('topic_id')->index();
+            $table->foreignUuid('topic_id')->index()->references('id')->on('topics')->cascadeOnDelete();
             $table->string('name');
             $table->longText('content');
             $table->string('status');

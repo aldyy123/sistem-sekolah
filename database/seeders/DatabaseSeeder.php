@@ -124,7 +124,6 @@ class DatabaseSeeder extends Seeder
                 'grade' => 12,
                 'phone' => '081234567890',
                 'address' => 'Jl. Raya No. 1',
-                // 'school_id' => $schoolId,
             ],
             [
                 'name' => 'teacheruser',
@@ -135,7 +134,6 @@ class DatabaseSeeder extends Seeder
                 'grade' => 12,
                 'phone'=> '089765432100',
                 'address' => 'Jl. Raya No. 2',
-                // 'school_id' => $schoolId,
             ],
             [
                 'name' => 'studentuser',
@@ -145,20 +143,7 @@ class DatabaseSeeder extends Seeder
                 'status' => true,
                 'grade' => 12,
                 'phone' => '084534567890',
-                // 'school_id' => $schoolId,
             ],
-            // // Add new teachers
-            // ['name' => 'teacheruser2', 'username' => 'teacher2', 'password' => Hash::make('password2'), 'role' => User::TEACHER, 'status' => true, 'grade' => 12, 'school_id' => $schoolId],
-            // ['name' => 'teacheruser3', 'username' => 'teacher3', 'password' => Hash::make('password3'), 'role' => User::TEACHER, 'status' => true, 'grade' => 12, 'school_id' => $schoolId],
-            // ['name' => 'teacheruser4', 'username' => 'teacher4', 'password' => Hash::make('password4'), 'role' => User::TEACHER, 'status' => true, 'grade' => 12, 'school_id' => $schoolId],
-            // ['name' => 'teacheruser5', 'username' => 'teacher5', 'password' => Hash::make('password5'), 'role' => User::TEACHER, 'status' => true, 'grade' => 12, 'school_id' => $schoolId],
-            // ['name' => 'teacheruser6', 'username' => 'teacher6', 'password' => Hash::make('password6'), 'role' => User::TEACHER, 'status' => true, 'grade' => 12, 'school_id' => $schoolId],
-            // // Add new students
-            // ['name' => 'studentuser2', 'username' => 'student2', 'password' => Hash::make('password2'), 'role' => User::STUDENT, 'status' => true, 'grade' => 12, 'school_id' => $schoolId],
-            // ['name' => 'studentuser3', 'username' => 'student3', 'password' => Hash::make('password3'), 'role' => User::STUDENT, 'status' => true, 'grade' => 12, 'school_id' => $schoolId],
-            // ['name' => 'studentuser4', 'username' => 'student4', 'password' => Hash::make('password4'), 'role' => User::STUDENT, 'status' => true, 'grade' => 12, 'school_id' => $schoolId],
-            // ['name' => 'studentuser5', 'username' => 'student5', 'password' => Hash::make('password5'), 'role' => User::STUDENT, 'status' => true, 'grade' => 12, 'school_id' => $schoolId],
-            // ['name' => 'studentuser6', 'username' => 'student6', 'password' => Hash::make('password6'), 'role' => User::STUDENT, 'status' => true, 'grade' => 12, 'school_id' => $schoolId],
         ];
 
         $selectedTeacherId = '';
@@ -187,7 +172,6 @@ class DatabaseSeeder extends Seeder
 
                 DB::table('experiences')->insert([
                     'id' => Uuid::uuid4()->toString(),
-                    // 'school_id' => $schoolId,
                     'grade' => 12,
                     'user_id' => $createdUser->id,
                     'experience_point' => 0,
@@ -199,15 +183,12 @@ class DatabaseSeeder extends Seeder
         $subjects = [
             [
                 'name' => 'Bahasa Indonesia',
-                // 'school_id' => $schoolId,
             ],
             [
                 'name' => 'Matematika',
-                // 'school_id' => $schoolId,
             ],
             [
                 'name' => 'Bahasa Sunda',
-                // 'school_id' => $schoolId,
             ],
         ];
 

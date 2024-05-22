@@ -33,7 +33,6 @@ class ManageAccountController extends Controller
         $faker = Factory::create();
         $userDB = new UserService;
         $experienceDB = new ExperienceService;
-        $schoolId = Auth::user()->school_id;
         $username = strtolower(explode(' ', $request->name)[0] . $faker->numerify('####'));
 
         $payload = [
@@ -50,10 +49,10 @@ class ManageAccountController extends Controller
             $payload['grade'] = $request->grade;
         }
 
-        $create = $userDB->create($schoolId, $payload);
+        $create = $userDB->create($payload);
 
         if ($request->role === 'STUDENT') {
-            $experienceDB->create($schoolId, $create->id, ['grade' => $payload['grade'] ?? null, 'experience_point' => 0, 'level' => 0]);
+            $experienceDB->create($create->id, ['grade' => $payload['grade'] ?? null, 'experience_point' => 0, 'level' => 0]);
         }
         return response()->json($create);
     }
@@ -74,7 +73,7 @@ class ManageAccountController extends Controller
             $payload['grade'] = $request->grade;
         }
 
-        $update = $userDB->update($schoolId, $request->id, $payload);
+        $update = $userDB->update($request->id, $payload);
 
         return response()->json($update);
     }
@@ -82,19 +81,17 @@ class ManageAccountController extends Controller
     public function resetPassword(Request $request)
     {
         $userDB = new UserService;
-        $schoolId = Auth::user()->school_id;
 
         $payload = [
             'password' => $request->username,
         ];
 
-        $update = $userDB->update($schoolId, $request->id, $payload);
+        $update = $userDB->update($request->id, $payload);
 
         return response()->json($update);
     }
 
     public function updatePassword(){
-        $schoolId = Auth::user()->school_id;
         $userDB = new UserService;
 
         $currentPassword = Auth::user()->password;
@@ -102,7 +99,6 @@ class ManageAccountController extends Controller
 
         if(HASH::check($oldPassword, $currentPassword)){
             $userDB->update(
-                $schoolId,
                 Auth::user()->id,
                 ['password' => request('password')]
             );

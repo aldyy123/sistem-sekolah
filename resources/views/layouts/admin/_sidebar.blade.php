@@ -10,3 +10,4 @@
     </ul>
 </li>
 <li class="{{ Request::is('admin/subjects') ? 'active' : '' }}"><a href="{{ route('admin.subjects') }}"><i class="icon-book-open"></i><span>Kelola Mapel</span></a></li>
+<li class="{{ Request::is('admin/batchs') ? 'active' : '' }}"><a href="{{ route('admin.batchs') }}"><i class="icon-book-open"></i><span>Kelola Mapel</span></a></li>

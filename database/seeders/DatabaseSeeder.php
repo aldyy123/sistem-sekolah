@@ -180,6 +180,8 @@ class DatabaseSeeder extends Seeder
             }
         }
 
+
+
         $subjects = [
             [
                 'name' => 'Bahasa Indonesia',

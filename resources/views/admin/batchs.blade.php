@@ -15,12 +15,12 @@
             <div class="col-lg-12">
                 <div class="card">
                     <ul class="nav nav-tabs">
-                        <li class="nav-item"><a class="nav-link active show" data-toggle="tab" href="#mapel">Mapel</a></li>
-                        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#addSubject">Tambah Periode
+                        <li class="nav-item"><a class="nav-link active show" data-toggle="tab" href="#batch">Mapel</a></li>
+                        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#addBatch">Tambah Periode
                                 Angkatan</a></li>
                     </ul>
                     <div class="tab-content mt-0">
-                        <div class="tab-pane show active" id="mapel">
+                        <div class="tab-pane show active" id="batch">
                             <div class="row my-3">
                                 <div class="col-lg-8 col-md-12 col-sm-12"></div>
                                 <div class="col-lg-4 col-md-12 col-sm-12">
@@ -49,11 +49,11 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $batch['status'] }}</td>
                                                 <td>{{ $batch['year'] }}</td>
-                                                <td>{{ $batch['start_periode'] }} - {{ $batch['end_periode'] }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($batch['start_periode'])->format('M') }} - {{ \Carbon\Carbon::parse($batch['end_periode'])->format('M') }}</td>
                                                 <td>
                                                     <button type="button" class="btn btn-sm btn-default" title="Edit"
                                                         data-toggle="modal"
-                                                        onclick="openEditModal('{{ $batch['start_periode'] }}-{{ $batch['end_periode'] }}', '{{ $batch['id'] }}')">
+                                                        onclick="openEditModal({{ json_encode($batch) }})">
                                                         <i class="fa fa-edit"></i>
                                                     </button>
                                                 </td>
@@ -64,7 +64,7 @@
                             </div>
                         </div>
 
-                        <div class="tab-pane" id="addSubject">
+                        <div class="tab-pane" id="addBatch">
                             <div class="body mt-2">
 
                                 @if (session('success'))
@@ -96,8 +96,14 @@
                                         </div>
                                         <div class="col-lg-6">
                                             <div class="form-group">
-                                                <label>Kapasitas</label>
-                                                <input type="number" class="form-control text-dark" name="capacity">
+                                                <label>Start Periode</label>
+                                                <input type="month" class="form-control text-dark" name="start_periode">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label>End Periode</label>
+                                                <input type="month" class="form-control text-dark" name="end_periode">
                                             </div>
                                         </div>
                                         <div class="col-lg-6">
@@ -111,18 +117,6 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-lg-6">
-                                            <div class="form-group">
-                                                <label>Start Periode</label>
-                                                <input type="month" class="form-control text-dark" name="start_periode">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="form-group">
-                                                <label>End Periode</label>
-                                                <input type="month" class="form-control text-dark" name="end_periode">
-                                            </div>
-                                        </div>
                                     </div>
                                     <div class="d-flex justify-content-end mt-3">
                                         <button type="submit" class="btn btn-primary">Tambah</button>
@@ -134,7 +128,7 @@
                 </div>
             </div>
         </div>
-        @include('layouts.admin._modal_edit_subject')
+        @include('layouts.admin._modal_edit_batchs')
         @include('layouts.admin._modal_edit_assign_subject')
     </div>
 @endsection
@@ -192,10 +186,13 @@
 
         })
 
-        function openEditModal(name, id) {
-            $('#modal-edit-subject').modal('show');
-            $('#edit-subject-name').val(name);
-            $('#edit-subject-id').val(id);
+        function openEditModal(batch) {
+            $('#modal-edit-batch').modal('show');
+            $('#year').val(batch.year);
+            $('#cloter').val(batch.cloter);
+            $('#status').val(batch.status);
+            $('#start_periode').val(batch.start_periode);
+            $('#end_periode').val(batch.end_periode);
         }
 
 

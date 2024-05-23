@@ -21,8 +21,6 @@ class ManageAccountController extends Controller
     {
         $userDB = new UserService;
 
-        $schoolId = Auth::user()->school_id;
-
         $accounts = $userDB->index(['role' => $request->role]);
 
         return response()->json($accounts);

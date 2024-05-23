@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Ramsey\Uuid\Uuid;
 
-class UserService {
+class UserService
+{
 
     public function index($filter = [])
     {
@@ -22,10 +23,19 @@ class UserService {
 
 
         $query = User::orderBy('created_at', $orderBy);
+        $with = []; // Always include subjects
 
 
         if ($role !== null) {
             $query->where('role', $role);
+            if ($role === 'STUDENT') {
+                $with[] = 'student.classroom';
+                $with[] = 'student.batch';
+            }
+
+            if ($role === 'TEACHER') {
+                $with[] = 'teacher';
+            }
         }
 
         if ($name !== null) {
@@ -37,8 +47,10 @@ class UserService {
         }
 
         if ($with_experience) {
-            $query->with('experience');
+            $with[] = 'experience';
         }
+
+        $query->with($with);
 
         $users = $query->simplePaginate($per_page);
 
@@ -52,7 +64,8 @@ class UserService {
         return $user->toArray();
     }
 
-    public function bulkDetail($userIds){
+    public function bulkDetail($userIds)
+    {
         $query = User::where('id', $userIds);
 
         $users = $query->simplePaginate(20);

@@ -11,4 +11,19 @@ class Students extends Model
 
     public $incrementing = false;
 
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function batch()
+    {
+        return $this->belongsTo(Batchs::class);
+    }
+
+    public function classroom()
+    {
+        return $this->belongsTo(Classroom::class);
+    }
 }

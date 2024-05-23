@@ -16,12 +16,12 @@ class CreateStudentsTable extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->uuid('id')->primary()->default(DB::raw('(UUID())'));
-            $table->foreignUuid('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignUuid('user_id')->index()->constrained('users')->cascadeOnDelete();
             $table->string('nis')->unique()->nullable();
             $table->string('last_education')->nullable();
             $table->string('degree')->nullable();
-            $table->foreignUuid('classroom_id')->constrained('classrooms')->cascadeOnDelete();
-            $table->foreignUuid('batch_id')->constrained('batchs')->cascadeOnDelete();
+            $table->foreignUuid('classroom_id')->index()->constrained('classrooms')->cascadeOnDelete();
+            $table->foreignUuid('batch_id')->index()->constrained('batchs')->cascadeOnDelete();
             $table->timestamps();
         });
     }

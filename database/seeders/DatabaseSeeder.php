@@ -48,65 +48,20 @@ class DatabaseSeeder extends Seeder
 
         $classrooms = [
             [
-                'code' => 'A1',
-                'name' => 'A1',
-                'level' => 'XII',
+                'code' => 'I',
+                'level' => 'SD',
                 'capacity' => 30,
             ],
             [
-                'code' => 'A2',
-                'name' => 'A2',
-                'level' => 'XII',
-                'capacity' => 30,
+                'code'=> 'II',
+                'level'=> 'SD',
+                'capacity'=> 40,
             ],
             [
-                'code' => 'A3',
-                'name' => 'A3',
-                'level' => 'XII',
-                'capacity' => 30,
-            ],
-            [
-                'code' => 'A4',
-                'name' => 'A4',
-                'level' => 'XII',
-                'capacity' => 30,
-            ],
-            [
-                'code' => 'A5',
-                'name' => 'A5',
-                'level' => 'XII',
-                'capacity' => 30,
-            ],
-            [
-                'code' => 'A6',
-                'name' => 'A6',
-                'level' => 'XII',
-                'capacity' => 30,
-            ],
-            [
-                'code' => 'A7',
-                'name' => 'A7',
-                'level' => 'XII',
-                'capacity' => 30,
-            ],
-            [
-                'code' => 'A8',
-                'name' => 'A8',
-                'level' => 'XII',
-                'capacity' => 30,
-            ],
-            [
-                'code' => 'A9',
-                'name' => 'A9',
-                'level' => 'XII',
-                'capacity' => 30,
-            ],
-            [
-                'code' => 'A10',
-                'name' => 'A10',
-                'level' => 'XII',
-                'capacity' => 30,
-            ],
+                'code' => 'III',
+                'level'=> 'SD',
+                'capacity'=> 50,
+            ]
         ];
 
 
@@ -121,7 +76,6 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make('adminlearnify123'),
                 'role' => User::ADMIN,
                 'status' => true,
-                'grade' => 12,
                 'phone' => '081234567890',
                 'address' => 'Jl. Raya No. 1',
             ],
@@ -131,7 +85,6 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make('teacherlearnify123'),
                 'role' => User::TEACHER,
                 'status' => true,
-                'grade' => 12,
                 'phone'=> '089765432100',
                 'address' => 'Jl. Raya No. 2',
             ],
@@ -141,7 +94,6 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make('studentlearnify123'),
                 'role' => User::STUDENT,
                 'status' => true,
-                'grade' => 12,
                 'phone' => '084534567890',
             ],
         ];

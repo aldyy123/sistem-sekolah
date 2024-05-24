@@ -11,6 +11,16 @@ class Students extends Model
 
     public $incrementing = false;
 
+    protected $fillable = [
+        'degree',
+        'nis',
+        'last_education',
+        'user_id',
+        'batch_id',
+        'classroom_id',
+    ];
+
+
 
     public function user()
     {

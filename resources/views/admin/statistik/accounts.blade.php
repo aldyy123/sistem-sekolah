@@ -103,6 +103,7 @@
     <script type="text/javascript">
         let role = "{{ request()->route('role') }}"
         let accounts = {}
+        let batchs = {}
 
         $.ajaxSetup({
             headers: {
@@ -113,6 +114,18 @@
         $(`#panel-${role}`).hide('slow');
         $(`#empty-${role}`).hide('slow');
         getAccount()
+        getBatchList()
+
+        function getBatchList() {
+            $.ajax({
+                type: "get",
+                url: "{{ url('/batchs/list') }}",
+                success: function(response) {
+                    batchs = response.data
+                    renderBatchList(response)
+                }
+            });
+        }
 
         function getAccount() {
             $.ajax({
@@ -132,6 +145,15 @@
                     }
                 }
             });
+        }
+
+
+        function renderBatchList(data) {
+            let html = ``
+            $.each(data.data, function(key, batch) {
+                html += `<option value="${batch.id}">${batch.start_periode} - ${batch.end_periode} ${batch.year}</option>`
+            });
+            $(`select[name=editBatch]`).html(html);
         }
 
         function renderAccount(data) {
@@ -229,13 +251,20 @@
 
         function editAccount(accountId) {
             let dataAccount = accounts.find(account => account.id === accountId);
+            const batch = dataAccount?.student?.batch
             $('input[type=hidden][name=idAccount]').val(dataAccount.id)
             $('input[name=editName]').val(dataAccount.name)
             $('input[name=editEmail]').val(dataAccount.email)
             $(`input[name=editStatus][value=${dataAccount.status}]`).prop('checked', true)
             if (role === 'STUDENT') {
-                $('input[name=editNis]').val(dataAccount.nis)
-                $(`select[name=editGrade] option[value=${dataAccount.grade}]`).attr('selected', 'selected');
+                $('input[name=editNis]').val(dataAccount?.student?.nis)
+                $(`select[name=editDegree] option[value=${dataAccount?.student?.degree ?? ''}]`).attr('selected', 'selected');
+                $(`select[name=editBatch] option[value='${batch.start_periode} - ${batch.end_periode} ${batch.year}']`).attr('selected', 'selected');
+                $(`select[name=editKelas] option[value=${dataAccount?.student?.classroom?.code ?? ''}]`).attr('selected', 'selected');
+            }
+            if (role === 'TEACHER') {
+                $('input[name=editNip]').val(dataAccount?.teacher?.nip)
+                $(`select[name=editDegree] option[value=${dataAccount?.teacher?.degree}]`).attr('selected', 'selected');
             }
         }
 
@@ -255,9 +284,26 @@
             if (role === 'STUDENT') {
                 let nis = $('input[name=editNis]').val()
                 let grade = $('select[name=editGrade]').val()
+                let degree = $('select[name=editDegree]').val()
+                let batch = $('select[name=editBatch]').val()
+                let kelas = $('select[name=editKelas]').val()
+
                 data['nis'] = nis
                 data['grade'] = grade
+                data['degree'] = degree
+                data['batch'] = batch
+                data['kelas'] = kelas
             }
+
+            if(role === 'TEACHER') {
+                let nip = $('input[name=editNip]').val()
+                let degree = $('select[name=editDegree]').val()
+
+                data['nip'] = nip
+                data['degree'] = degree
+            }
+
+            console.log(data);
 
             let button = $('#update-button')
             $.ajax({

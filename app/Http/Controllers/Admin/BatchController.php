@@ -23,6 +23,12 @@ class BatchController extends Controller
         ]);
     }
 
+    public function getBatchList(){
+        $batch = $this->batchsService->index();
+
+        return response()->json($batch);
+    }
+
     public function store(Request $request)
     {
         $request->validate([

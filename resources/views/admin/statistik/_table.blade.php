@@ -77,13 +77,23 @@
             <tr>
                 <th class="w60">#</th>
                 <th>Name</th>
+                <th>Email</th>
                 @if (request()->route('role') === 'STUDENT')
                     <th>NIS</th>
                 @endif
-                @if (request()->route('role') === 'STUDENT' || request()->route('role') === 'TEACHER')
+                @if (request()->route('role') === 'TEACHER')
+                    <th>NIP</th>
+                @endif
+                @if (request()->route('role') === 'TEACHER' || 'STUDENT' == request()->route('role'))
+                    <th>Pendidikan Terakhir</th>
+                @endif
+                @if (request()->route('role') === 'STUDENT')
                     <th>Kelas</th>
                 @endif
                 <th>Username</th>
+                @if (request()->route('role') === 'STUDENT')
+                    <th>Batch</th>
+                @endif
                 <th>Status</th>
                 <th class="w100">Action</th>
             </tr>
@@ -102,13 +112,23 @@
             <tr>
                 <th class="w60">#</th>
                 <th>Name</th>
+                <th>Email</th>
                 @if (request()->route('role') === 'STUDENT')
                     <th>NIS</th>
+                @endif
+                @if (request()->route('role') === 'TEACHER')
+                    <th>NIP</th>
+                @endif
+                @if (request()->route('role') === 'TEACHER' || 'STUDENT' == request()->route('role'))
+                    <th>Pendidikan Terakhir</th>
                 @endif
                 @if (request()->route('role') === 'STUDENT')
                     <th>Kelas</th>
                 @endif
                 <th>Username</th>
+                @if (request()->route('role') === 'STUDENT')
+                    <th>Batch</th>
+                @endif
                 <th>Status</th>
                 <th class="w100">Action</th>
             </tr>

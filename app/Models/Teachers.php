@@ -11,4 +11,11 @@ class Teachers extends Model
 
     public $incrementing = false;
 
+    protected $fillable = [
+        'degree',
+        'nip',
+        'last_education',
+        'user_id',
+    ];
+
 }

@@ -18,20 +18,25 @@ class User extends Authenticatable
 
     protected $fillable = [
         'id',
-        'school_id',
         'name',
         'username',
         'password',
         'role',
         'status',
         'email',
-        'nis',
-        'grade',
         'created_at',
         'update_at',
     ];
 
     public function experience(){
         return $this->hasOne(Experience::class);
+    }
+
+    public function student(){
+        return $this->hasOne(Students::class);
+    }
+
+    public function teacher(){
+        return $this->hasOne(Teachers::class);
     }
 }

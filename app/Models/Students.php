@@ -11,4 +11,29 @@ class Students extends Model
 
     public $incrementing = false;
 
+    protected $fillable = [
+        'degree',
+        'nis',
+        'last_education',
+        'user_id',
+        'batch_id',
+        'classroom_id',
+    ];
+
+
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function batch()
+    {
+        return $this->belongsTo(Batchs::class);
+    }
+
+    public function classroom()
+    {
+        return $this->belongsTo(Classroom::class);
+    }
 }

@@ -16,7 +16,7 @@ class CreateTeachersTable extends Migration
     {
         Schema::create('teachers', function (Blueprint $table) {
             $table->uuid('id')->primary()->default(DB::raw('(UUID())'));
-            $table->foreignUuid('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignUuid('user_id')->index()->constrained('users')->cascadeOnDelete();
             $table->string('nip')->unique()->nullable();
             $table->string('degree')->nullable();
             $table->string('last_education')->nullable();

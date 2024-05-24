@@ -15,12 +15,36 @@
             <div class="col-lg-12">
                 <div class="card">
                     <ul class="nav nav-tabs">
-                        <li class="nav-item"><a class="nav-link active show" data-toggle="tab" href="#batch">Mapel</a></li>
+                        <li class="nav-item"><a class="nav-link active show" data-toggle="tab" href="#batch">Batch</a></li>
                         <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#addBatch">Tambah Periode
                                 Angkatan</a></li>
                     </ul>
                     <div class="tab-content mt-0">
                         <div class="tab-pane show active" id="batch">
+
+                            @if ($errors->any())
+                                <div class="alert alert-danger" role="alert">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
+
+                            @if (session('success'))
+                                <div class="alert alert-success" role="alert">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+
+                            @if (session('error'))
+                                <div class="alert alert-danger" role="alert">
+                                    {{ session('error') }}
+                                </div>
+                            @endif
+
                             <div class="row my-3">
                                 <div class="col-lg-8 col-md-12 col-sm-12"></div>
                                 <div class="col-lg-4 col-md-12 col-sm-12">
@@ -41,6 +65,7 @@
                                             <th>Year</th>
                                             <th>Periode</th>
                                             <th>Edit Batch</th>
+                                            <th>Delete Batch</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -49,12 +74,20 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $batch['status'] }}</td>
                                                 <td>{{ $batch['year'] }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($batch['start_periode'])->format('M') }} - {{ \Carbon\Carbon::parse($batch['end_periode'])->format('M') }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($batch['start_periode'])->format('M') }} -
+                                                    {{ \Carbon\Carbon::parse($batch['end_periode'])->format('M') }}</td>
                                                 <td>
                                                     <button type="button" class="btn btn-sm btn-default" title="Edit"
                                                         data-toggle="modal"
                                                         onclick="openEditModal({{ json_encode($batch) }})">
                                                         <i class="fa fa-edit"></i>
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-sm btn-default" title="Edit"
+                                                        data-toggle="modal"
+                                                        onclick="openDeleteModal({{ json_encode($batch) }})">
+                                                        <i class="fa fa-trash"></i>
                                                     </button>
                                                 </td>
                                             </tr>
@@ -67,49 +100,37 @@
                         <div class="tab-pane" id="addBatch">
                             <div class="body mt-2">
 
-                                @if (session('success'))
-                                    <div class="alert alert-success" role="alert">
-                                        {{ session('success') }}
-                                    </div>
-                                @endif
-
-                                @if (session('error'))
-                                    <div class="alert alert-danger" role="alert">
-                                        {{ session('error') }}
-                                    </div>
-                                @endif
-
                                 <form method="POST" action="{{ route('admin.batchs.store') }}">
                                     @csrf
                                     <div class="row">
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label>Year</label>
-                                                <input type="year" class="form-control text-dark" name="year">
+                                                <input type="year" value="{{ old('year') }}" class="form-control text-dark" name="year">
                                             </div>
                                         </div>
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label>Kloter</label>
-                                                <input type="number" class="form-control text-dark" name="cloter">
+                                                <input type="number" value="{{ old('cloter') }}" class="form-control text-dark" name="cloter">
                                             </div>
                                         </div>
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label>Start Periode</label>
-                                                <input type="month" class="form-control text-dark" name="start_periode">
+                                                <input type="month" value="{{ old('start_periode') }}" class="form-control text-dark" name="start_periode">
                                             </div>
                                         </div>
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label>End Periode</label>
-                                                <input type="month" class="form-control text-dark" name="end_periode">
+                                                <input type="month" value="{{ old('end_periode') }}" class="form-control text-dark" name="end_periode">
                                             </div>
                                         </div>
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label>Status</label>
-                                                <select class="custom-select" name="status"
+                                                <select class="custom-select" value="{{ old('status') }}" name="status"
                                                     aria-label="Default select example">
                                                     <option selected>Select Status</option>
                                                     <option value="active">Active</option>
@@ -129,7 +150,7 @@
             </div>
         </div>
         @include('layouts.admin._modal_edit_batchs')
-        @include('layouts.admin._modal_edit_assign_subject')
+        @include('layouts.admin._modal_delete_batchs')
     </div>
 @endsection
 
@@ -189,10 +210,17 @@
         function openEditModal(batch) {
             $('#modal-edit-batch').modal('show');
             $('#year').val(batch.year);
+            $('#batch_id').val(batch.id);
+            $('#year').val(batch.year);
             $('#cloter').val(batch.cloter);
             $('#status').val(batch.status);
             $('#start_periode').val(batch.start_periode);
             $('#end_periode').val(batch.end_periode);
+        }
+
+        function openDeleteModal(batch) {
+            $('#modal-delete-batch').modal('show');
+            $('#batch_id_delete').val(batch.id);
         }
 
 

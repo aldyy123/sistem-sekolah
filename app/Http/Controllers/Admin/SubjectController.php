@@ -7,7 +7,6 @@ use App\Service\Database\SubjectService;
 use App\Service\Database\SubjectTeacherService;
 use App\Service\Database\UserService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class SubjectController extends Controller
 {

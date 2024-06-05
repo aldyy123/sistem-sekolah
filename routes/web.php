@@ -51,6 +51,12 @@ Route::group(['middleware' => ['auth', 'role:ADMIN']], function(){
             return view('admin.statistik.accounts')->with('grades', config('constant.grades'));
         })->name('statistik.accounts');
 
+        Route::get('/batchs', [Admin\BatchController::class, 'index'])->name('batchs');
+        Route::post('/batchs', [Admin\BatchController::class, 'store'])->name('batchs.store');
+        Route::patch('/batchs', [Admin\BatchController::class, 'update'])->name('batchs.update');
+        Route::delete('/batchs', [Admin\BatchController::class, 'delete'])->name('batchs.delete');
+        Route::get('/batchs/list', [Admin\BatchController::class,'getBatchList'])->name('batchs.list');
+
         Route::get('/subjects', [SubjectController::class, 'index'])
         ->name('subjects');
         Route::post('/subjects', [SubjectController::class, 'create']);
@@ -134,7 +140,7 @@ Route::group(['middleware' => ['auth', 'role:TEACHER']], function(){
             });
         });
 
-        
+
     });
 });
 

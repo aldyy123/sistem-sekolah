@@ -2,9 +2,10 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class CreateExperiencesTable extends Migration
+class CreateClassTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +14,13 @@ class CreateExperiencesTable extends Migration
      */
     public function up()
     {
-        Schema::create('experiences', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('user_id')->index()->constrained('users')->cascadeOnDelete();
-            $table->integer('experience_point');
-            $table->integer('level');
+        Schema::create('classrooms', function (Blueprint $table) {
+            $table->uuid('id')->primary()->default(DB::raw('(UUID())'));
+            $table->string('code')->unique();
+            $table->string('level');
             $table->smallInteger('grade');
+            $table->integer('capacity');
+            $table->string('status')->default('active');
             $table->timestamps();
         });
     }
@@ -30,6 +32,6 @@ class CreateExperiencesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('experiences');
+        Schema::dropIfExists('classrooms');
     }
 }

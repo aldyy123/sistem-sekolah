@@ -2,8 +2,6 @@
 
 namespace App\Service\Database;
 
-use App\Models\School;
-use App\Models\Subject;
 use App\Models\SubjectTeacher;
 use Illuminate\Support\Facades\Validator;
 use Ramsey\Uuid\Uuid;
@@ -22,7 +20,7 @@ class SubjectTeacherService {
             $query->whereJsonContains('teachers', $teacherId);
         }
 
-        $users = $query->simplePaginate($per_page);
+        $users = $query->with('subject')->simplePaginate($per_page);
 
         return $users;
     }

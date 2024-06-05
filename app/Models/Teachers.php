@@ -1,0 +1,21 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Teachers extends Model
+{
+    use HasFactory;
+
+    public $incrementing = false;
+
+    protected $fillable = [
+        'degree',
+        'nip',
+        'last_education',
+        'user_id',
+    ];
+
+}

@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Batchs;
+use App\Models\Classroom;
 use App\Models\Course;
-use App\Models\School;
 use App\Models\Subject;
 use App\Models\SubjectTeacher;
 use App\Models\Topic;
@@ -12,6 +13,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Ramsey\Uuid\Uuid;
+use Faker\Factory as Faker;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,7 +24,53 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $schoolId = School::factory(['name' => 'SMK Indonesia'])->create()->id;
+        $faker = Faker::create();
+
+        $batchs = [
+            [
+                'start_periode' => 'January',
+                'end_periode' => 'June',
+                'year' => '2021',
+                'status' => 'active',
+            ],
+            [
+                'start_periode' => 'July',
+                'end_periode' => 'December',
+                'year' => '2021',
+                'status' => 'active',
+            ]
+        ];
+
+        foreach ($batchs as $batch) {
+            DB::table('batchs')->insert($batch);
+        }
+
+
+        $classrooms = [
+            [
+                'code' => 'I',
+                'grade' => Classroom::LEVELGRADE['I'],
+                'level' => 'SD',
+                'capacity' => 30,
+            ],
+            [
+                'code'=> 'II',
+                'level'=> 'SD',
+                'grade' => Classroom::LEVELGRADE['II'],
+                'capacity'=> 40,
+            ],
+            [
+                'code' => 'III',
+                'level'=> 'SD',
+                'grade' => Classroom::LEVELGRADE['III'],
+                'capacity'=> 50,
+            ]
+        ];
+
+
+        foreach ($classrooms as $classroom) {
+            Classroom::create($classroom);
+        }
 
         $users = [
             [
@@ -31,8 +79,8 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make('adminlearnify123'),
                 'role' => User::ADMIN,
                 'status' => true,
-                'grade' => 12,
-                // 'school_id' => $schoolId,
+                'phone' => '081234567890',
+                'address' => 'Jl. Raya No. 1',
             ],
             [
                 'name' => 'teacheruser',
@@ -40,8 +88,8 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make('teacherlearnify123'),
                 'role' => User::TEACHER,
                 'status' => true,
-                'grade' => 12,
-                // 'school_id' => $schoolId,
+                'phone'=> '089765432100',
+                'address' => 'Jl. Raya No. 2',
             ],
             [
                 'name' => 'studentuser',
@@ -49,21 +97,8 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make('studentlearnify123'),
                 'role' => User::STUDENT,
                 'status' => true,
-                'grade' => 12,
-                // 'school_id' => $schoolId,
+                'phone' => '084534567890',
             ],
-            // // Add new teachers
-            // ['name' => 'teacheruser2', 'username' => 'teacher2', 'password' => Hash::make('password2'), 'role' => User::TEACHER, 'status' => true, 'grade' => 12, 'school_id' => $schoolId],
-            // ['name' => 'teacheruser3', 'username' => 'teacher3', 'password' => Hash::make('password3'), 'role' => User::TEACHER, 'status' => true, 'grade' => 12, 'school_id' => $schoolId],
-            // ['name' => 'teacheruser4', 'username' => 'teacher4', 'password' => Hash::make('password4'), 'role' => User::TEACHER, 'status' => true, 'grade' => 12, 'school_id' => $schoolId],
-            // ['name' => 'teacheruser5', 'username' => 'teacher5', 'password' => Hash::make('password5'), 'role' => User::TEACHER, 'status' => true, 'grade' => 12, 'school_id' => $schoolId],
-            // ['name' => 'teacheruser6', 'username' => 'teacher6', 'password' => Hash::make('password6'), 'role' => User::TEACHER, 'status' => true, 'grade' => 12, 'school_id' => $schoolId],
-            // // Add new students
-            // ['name' => 'studentuser2', 'username' => 'student2', 'password' => Hash::make('password2'), 'role' => User::STUDENT, 'status' => true, 'grade' => 12, 'school_id' => $schoolId],
-            // ['name' => 'studentuser3', 'username' => 'student3', 'password' => Hash::make('password3'), 'role' => User::STUDENT, 'status' => true, 'grade' => 12, 'school_id' => $schoolId],
-            // ['name' => 'studentuser4', 'username' => 'student4', 'password' => Hash::make('password4'), 'role' => User::STUDENT, 'status' => true, 'grade' => 12, 'school_id' => $schoolId],
-            // ['name' => 'studentuser5', 'username' => 'student5', 'password' => Hash::make('password5'), 'role' => User::STUDENT, 'status' => true, 'grade' => 12, 'school_id' => $schoolId],
-            // ['name' => 'studentuser6', 'username' => 'student6', 'password' => Hash::make('password6'), 'role' => User::STUDENT, 'status' => true, 'grade' => 12, 'school_id' => $schoolId],
         ];
 
         $selectedTeacherId = '';
@@ -72,12 +107,26 @@ class DatabaseSeeder extends Seeder
 
             if ($createdUser->role === 'TEACHER') {
                 $selectedTeacherId = $createdUser->id;
+                DB::table('teachers')->insert([
+                    'id' => Uuid::uuid4()->toString(),
+                    'degree' => $faker->randomElement(['S1', 'S2', 'S3', 'D3']),
+                    'last_education' => $faker->randomElement(['Universitas Indonesia', 'Universitas Gadjah Mada', 'Universitas Padjadjaran']),
+                    'user_id' => $createdUser->id,
+                ]);
             }
 
             if ($createdUser->role === 'STUDENT') {
+                DB::table('students')->insert([
+                    'id' => Uuid::uuid4()->toString(),
+                    'user_id' => $createdUser->id,
+                    'classroom_id' => Classroom::pluck('id')->random(),
+                    'last_education' => 'SMPN 1 Bandung',
+                    'degree' => $faker->randomElement(['SMP', 'MTS', 'SMA', 'MA']),
+                    'batch_id' => Batchs::pluck('id')->random(),
+                ]);
+
                 DB::table('experiences')->insert([
                     'id' => Uuid::uuid4()->toString(),
-                    // 'school_id' => $schoolId,
                     'grade' => 12,
                     'user_id' => $createdUser->id,
                     'experience_point' => 0,
@@ -86,18 +135,17 @@ class DatabaseSeeder extends Seeder
             }
         }
 
+
+
         $subjects = [
             [
                 'name' => 'Bahasa Indonesia',
-                // 'school_id' => $schoolId,
             ],
             [
                 'name' => 'Matematika',
-                // 'school_id' => $schoolId,
             ],
             [
                 'name' => 'Bahasa Sunda',
-                // 'school_id' => $schoolId,
             ],
         ];
 
@@ -116,7 +164,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $courseIds = [];
-        foreach($subjectIds as $subjectId) {
+        foreach ($subjectIds as $subjectId) {
             $course = [
                 'description' => $courseDescription->random(),
                 'grade' => 12,
@@ -127,7 +175,7 @@ class DatabaseSeeder extends Seeder
             $courseIds[] = Course::factory($course)->create()->id;
         }
 
-        foreach($subjectIds as $subjectId) {
+        foreach ($subjectIds as $subjectId) {
             $course = [
                 'description' => $courseDescription->random(),
                 'grade' => 11,
@@ -138,16 +186,12 @@ class DatabaseSeeder extends Seeder
             $courseIds[] = Course::factory($course)->create()->id;
         }
 
-        foreach($subjectIds as $subjectId) {
-            foreach($courseIds as $courseId) {
-                for($i = 0; $i < 3; $i++) {
+        foreach ($subjectIds as $subjectId) {
+            foreach ($courseIds as $courseId) {
+                for ($i = 0; $i < 3; $i++) {
                     Topic::factory(['course_id' => $courseId, 'subject_id' => $subjectId])->create();
                 }
             }
         }
-
-
-
-
     }
 }

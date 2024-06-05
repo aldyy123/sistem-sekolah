@@ -7,7 +7,11 @@ use App\Exports\TeacherExport;
 use App\Imports\StudentImport;
 use App\Imports\TeacherImport;
 use App\Http\Controllers\Controller;
+use App\Models\Classroom;
+use App\Service\Database\ClassroomService;
 use App\Service\Database\ExperienceService;
+use App\Service\Database\StudentService;
+use App\Service\Database\TeacherService;
 use App\Service\Database\UserService;
 use Faker\Factory;
 use Illuminate\Http\Request;
@@ -21,8 +25,6 @@ class ManageAccountController extends Controller
     {
         $userDB = new UserService;
 
-        $schoolId = Auth::user()->school_id;
-
         $accounts = $userDB->index(['role' => $request->role]);
 
         return response()->json($accounts);
@@ -32,8 +34,10 @@ class ManageAccountController extends Controller
     {
         $faker = Factory::create();
         $userDB = new UserService;
+        $classroomService = new ClassroomService;
+        $studentService = new StudentService;
+        $teacherService = new TeacherService;
         $experienceDB = new ExperienceService;
-        $schoolId = Auth::user()->school_id;
         $username = strtolower(explode(' ', $request->name)[0] . $faker->numerify('####'));
 
         $payload = [
@@ -43,66 +47,106 @@ class ManageAccountController extends Controller
             'role' => $request->role,
             'email' => $request->email,
             'status' => 1,
+            'phone' => $request->phone,
+            'address' => $request->address,
         ];
 
-        if ($request->role === 'STUDENT') {
-            $payload['nis'] = $request->nis;
-            $payload['grade'] = $request->grade;
-        }
-
-        $create = $userDB->create($schoolId, $payload);
+        $create = $userDB->create($payload);
 
         if ($request->role === 'STUDENT') {
-            $experienceDB->create($schoolId, $create->id, ['grade' => $payload['grade'] ?? null, 'experience_point' => 0, 'level' => 0]);
+            $codeClassroom = $classroomService->getClassroomByCode($request->grade);
+
+            $studentPayload = [
+                'nis'=> $request->nis,
+                'batch_id' => $request->batch,
+                'degree' => $request->degree,
+                'classroom_id'=> $codeClassroom->id,
+                'user_id' => $create->id,
+                'last_education' => $request->last_education,
+            ];
+            $studentService->create($studentPayload);
+            $experienceDB->create($create->id, ['grade' => Classroom::LEVELGRADE[$request->grade] ?? null, 'experience_point' => 0, 'level' => 0]);
         }
+
+
+        if ($request->role === 'TEACHER') {
+            $payload['nip'] = $request->nip;
+            $payload['degree'] = $request->degree;
+            $payload['last_education'] = $request->last_education;
+            $payload['user_id'] = $create->id;
+
+            $teacherService->create($payload);
+        }
+
         return response()->json($create);
     }
 
     public function updateAccount(Request $request)
     {
         $userDB = new UserService;
-        $schoolId = Auth::user()->school_id;
+        $studentService = new StudentService;
+        $classroomService = new ClassroomService;
+        $teacherService = new TeacherService;
 
-        $payload = [
+        $responseJson = [];
+
+        $payloadUser = [
             'name' => $request->name,
             'email' => $request->email,
             'status' => (int)$request->status,
         ];
 
+        $update = $userDB->update($request->id, $payloadUser);
+        $responseJson['user'] = $update;
+
         if ($request->role === 'STUDENT') {
-            $payload['nis'] = $request->nis;
-            $payload['grade'] = $request->grade;
+            $classroom = $classroomService->getClassroomByCode($request->kelas);
+            $updateData = [
+                'nis' => $request->nis,
+                'batch_id' => $request->batch,
+                'degree' => $request->degree,
+                'classroom_id' => $classroom->id,
+            ];
+
+            $studentService = $studentService->update($request->id, $updateData);
+            $responseJson['student'] = $studentService;
         }
 
-        $update = $userDB->update($schoolId, $request->id, $payload);
+        if ($request->role === 'TEACHER') {
+            $updateData = [
+                'nip' => $request->nip,
+                'degree' => $request->degree,
+            ];
 
-        return response()->json($update);
+            $teacherService = $teacherService->update($request->id, $updateData);
+            $responseJson['teacher'] = $teacherService;
+        }
+
+        return response()->json($responseJson, 200);
     }
 
     public function resetPassword(Request $request)
     {
         $userDB = new UserService;
-        $schoolId = Auth::user()->school_id;
 
         $payload = [
             'password' => $request->username,
         ];
 
-        $update = $userDB->update($schoolId, $request->id, $payload);
+        $update = $userDB->update($request->id, $payload);
 
         return response()->json($update);
     }
 
-    public function updatePassword(){
-        $schoolId = Auth::user()->school_id;
+    public function updatePassword()
+    {
         $userDB = new UserService;
 
         $currentPassword = Auth::user()->password;
         $oldPassword = request('old_password');
 
-        if(HASH::check($oldPassword, $currentPassword)){
+        if (HASH::check($oldPassword, $currentPassword)) {
             $userDB->update(
-                $schoolId,
                 Auth::user()->id,
                 ['password' => request('password')]
             );
@@ -113,37 +157,43 @@ class ManageAccountController extends Controller
         }
     }
 
-    public function downloadExcelStudent() {
-        $file = public_path()."\assets\\excel\learnify_id_user_import_format_student.xlsx";
+    public function downloadExcelStudent()
+    {
+        $file = public_path() . "\assets\\excel\learnify_id_user_import_format_student.xlsx";
         $headers = array('Content-Type: application/xlsx',);
         return response()->download($file, 'learnify_id_user_import_format_student.xlsx', $headers);
     }
 
-    public function downloadExcelTeacher() {
-        $file = public_path()."\assets\\excel\learnify_id_user_import_format_teacher.xlsx";
+    public function downloadExcelTeacher()
+    {
+        $file = public_path() . "\assets\\excel\learnify_id_user_import_format_teacher.xlsx";
         $headers = array('Content-Type: application/xlsx',);
         return response()->download($file, 'learnify_id_user_import_format_teacher.xlsx', $headers);
     }
 
-    public function importStudent(Request $request) {
+    public function importStudent(Request $request)
+    {
 
         Excel::import(new StudentImport, $request->file('excel-file'));
 
         return redirect()->back();
     }
 
-    public function importTeacher(Request $request) {
+    public function importTeacher(Request $request)
+    {
 
         Excel::import(new TeacherImport, $request->file('excel-file'));
 
         return redirect()->back();
     }
 
-    public function exportStudent() {
+    public function exportStudent()
+    {
         return Excel::download(new StudentExport, "student_account.xlsx");
     }
 
-    public function exportTeacher() {
+    public function exportTeacher()
+    {
         return Excel::download(new TeacherExport, "teacher_account.xlsx");
     }
 }

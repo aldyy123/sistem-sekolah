@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Ramsey\Uuid\Uuid;
 
-class UserService {
+class UserService
+{
 
     public function index($filter = [])
     {
@@ -22,10 +23,19 @@ class UserService {
 
 
         $query = User::orderBy('created_at', $orderBy);
+        $with = []; // Always include subjects
 
 
         if ($role !== null) {
             $query->where('role', $role);
+            if ($role === 'STUDENT') {
+                $with[] = 'student.classroom';
+                $with[] = 'student.batch';
+            }
+
+            if ($role === 'TEACHER') {
+                $with[] = 'teacher';
+            }
         }
 
         if ($name !== null) {
@@ -37,8 +47,10 @@ class UserService {
         }
 
         if ($with_experience) {
-            $query->with('experience');
+            $with[] = 'experience';
         }
+
+        $query->with($with);
 
         $users = $query->simplePaginate($per_page);
 
@@ -52,7 +64,8 @@ class UserService {
         return $user->toArray();
     }
 
-    public function bulkDetail($userIds){
+    public function bulkDetail($userIds)
+    {
         $query = User::where('id', $userIds);
 
         $users = $query->simplePaginate(20);
@@ -64,7 +77,7 @@ class UserService {
     {
 
         $user = new User;
-        $user->id = Uuid::uuid4()->toString();
+        $user->id = Uuid::uuid4();
         $user = $this->fill($user, $payload);
         $user->password = Hash::make($user->password);
         $user->save();
@@ -94,9 +107,10 @@ class UserService {
             'username' => 'required|string',
             'password' => 'required|string',
             'status' => 'required',
-            'nis' => 'nullable|numeric',
-            'grade' => 'nullable|numeric',
             'email' => 'nullable|email',
+            'phone' => 'nullable|string|unique:users,phone',
+            'photo' => 'nullable|string',
+            'address' => 'nullable|string',
             'role' => ['required', Rule::in(config('constant.user.roles'))],
         ])->validate();
 

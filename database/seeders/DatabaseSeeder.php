@@ -49,17 +49,20 @@ class DatabaseSeeder extends Seeder
         $classrooms = [
             [
                 'code' => 'I',
+                'grade' => Classroom::LEVELGRADE['I'],
                 'level' => 'SD',
                 'capacity' => 30,
             ],
             [
                 'code'=> 'II',
                 'level'=> 'SD',
+                'grade' => Classroom::LEVELGRADE['II'],
                 'capacity'=> 40,
             ],
             [
                 'code' => 'III',
                 'level'=> 'SD',
+                'grade' => Classroom::LEVELGRADE['III'],
                 'capacity'=> 50,
             ]
         ];

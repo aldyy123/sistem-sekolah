@@ -77,7 +77,7 @@ class UserService
     {
 
         $user = new User;
-        $user->id = Uuid::uuid4()->toString();
+        $user->id = Uuid::uuid4();
         $user = $this->fill($user, $payload);
         $user->password = Hash::make($user->password);
         $user->save();
@@ -107,9 +107,10 @@ class UserService
             'username' => 'required|string',
             'password' => 'required|string',
             'status' => 'required',
-            'nis' => 'nullable|numeric',
-            'grade' => 'nullable|numeric',
             'email' => 'nullable|email',
+            'phone' => 'nullable|string|unique:users,phone',
+            'photo' => 'nullable|string',
+            'address' => 'nullable|string',
             'role' => ['required', Rule::in(config('constant.user.roles'))],
         ])->validate();
 

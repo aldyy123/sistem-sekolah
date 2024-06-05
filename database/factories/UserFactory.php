@@ -33,7 +33,6 @@ class UserFactory extends Factory
             'role' => $this->faker->randomElement($roles),
             'status' => true,
             'email' => $this->faker->email(),
-            'nis' => null,
         ];
     }
 }

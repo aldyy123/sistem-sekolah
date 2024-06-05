@@ -1,5 +1,15 @@
 @extends('layouts.app')
-
+@php
+    $degrees = [
+        'SD' => 'SD',
+        'SMP' => 'SMP',
+        'SMA' => 'SMA',
+        'D3' => 'D3',
+        'S1' => 'S1',
+        'S2' => 'S2',
+        'S3' => 'S3',
+    ];
+@endphp
 @section('content')
     <div class="block-header">
         <div class="clearfix mb-3">
@@ -101,7 +111,7 @@
     <script src="{{ asset('assets/vendor/sweetalert/sweetalert.min.js') }}"></script>
     <script src="{{ asset('assets/js/pages/ui/dialogs.js') }}"></script>
     <script type="text/javascript">
-        let role = "{{ request()->route('role') }}"
+        const role = "{{ request()->route('role') }}"
         let accounts = {}
         let batchs = {}
 
@@ -151,9 +161,11 @@
         function renderBatchList(data) {
             let html = ``
             $.each(data.data, function(key, batch) {
-                html += `<option value="${batch.id}">${batch.start_periode} - ${batch.end_periode} ${batch.year}</option>`
+                html +=
+                    `<option value="${batch.id}">${batch.start_periode} - ${batch.end_periode} ${batch.year}</option>`
             });
             $(`select[name=editBatch]`).html(html);
+            $(`select[name=${role}Batch_student]`).html(html);
         }
 
         function renderAccount(data) {
@@ -213,20 +225,38 @@
         }
 
         function createAccount() {
-            let name = $(`input[name=${role}Name]`).val();
-            let email = $(`input[name=${role}Email]`).val();
-            let data = {
+            const name = $(`input[name=${role}Name]`).val();
+            const email = $(`input[name=${role}Email]`).val();
+            const phone = $(`input[name=${role}Phone]`).val();
+            const address = $(`textarea[name=${role}Address]`).val();
+            const username = $(`input[name=${role}Username]`).val();
+
+            const data = {
                 name,
                 email,
-                role
+                role,
+                phone,
+                address,
+                username
             }
+
             if (role === 'STUDENT') {
-                let nis = $(`input[name=${role}Nis]`).val();
-                let grade = $(`select[name=${role}Grade]`).val();
+                const nis = $(`input[name=${role}Nis]`).val();
+                const grade = $(`select[name=${role}Grade]`).val();
+                const lastEducation = $(`input[name=${role}Last_education]`).val();
+                const degree = $(`select[name=${role}Degree]`).val();
+                const batchValue = $(`select[name=${role}Batch_student]`).val()
+
                 data['nis'] = nis
                 data['grade'] = grade
+                data['batch'] = batchValue
+                data['degree'] = degree
+                data['last_education'] = lastEducation
             }
-            let btnSubmit = $(`#${role}-submit`)
+
+            const btnSubmit = $(`#${role}-submit`)
+
+            console.log(data);
 
             $.ajax({
                 type: "post",
@@ -238,15 +268,28 @@
                 success: function(response) {
                     btnSubmit.html('Tambah')
                     $(`#${role}-alert`).show('fast');
+                    $(`#${role}-alert-danger`).hide('fast');
                     accounts.push(response)
                     // resetValue()
                     getAccount()
                 },
                 error: function(e) {
                     btnSubmit.html('Tambah')
-                    alert('Tambah akun belum berhasil, silahkan coba lagi!')
+                    $(`#${role}-alert`).hide('fast');
+                    renderError(e.responseJSON.errors)
                 }
             });
+        }
+
+        function renderError(data) {
+            let html = ``
+            $.each(data, function(key, value) {
+                html += `<li>${value}</li>`
+            });
+
+            $(`#${role}-alert-danger`).html('');
+            $(`#${role}-alert-danger`).html(`<ul>${html}</ul>`);
+            $(`#${role}-alert-danger`).show('fast');
         }
 
         function editAccount(accountId) {
@@ -256,11 +299,15 @@
             $('input[name=editName]').val(dataAccount.name)
             $('input[name=editEmail]').val(dataAccount.email)
             $(`input[name=editStatus][value=${dataAccount.status}]`).prop('checked', true)
+
             if (role === 'STUDENT') {
                 $('input[name=editNis]').val(dataAccount?.student?.nis)
-                $(`select[name=editDegree] option[value=${dataAccount?.student?.degree ?? ''}]`).attr('selected', 'selected');
-                $(`select[name=editBatch] option[value='${batch.start_periode} - ${batch.end_periode} ${batch.year}']`).attr('selected', 'selected');
-                $(`select[name=editKelas] option[value=${dataAccount?.student?.classroom?.code ?? ''}]`).attr('selected', 'selected');
+                $(`select[name=editDegree] option[value=${dataAccount?.student?.degree ?? ''}]`).attr('selected',
+                    'selected');
+                $(`select[name=editBatch] option[value='${batch.start_periode} - ${batch.end_periode} ${batch.year}']`)
+                    .attr('selected', 'selected');
+                $(`select[name=editKelas] option[value=${dataAccount?.student?.classroom?.code ?? ''}]`).attr('selected',
+                    'selected');
             }
             if (role === 'TEACHER') {
                 $('input[name=editNip]').val(dataAccount?.teacher?.nip)
@@ -295,7 +342,7 @@
                 data['kelas'] = kelas
             }
 
-            if(role === 'TEACHER') {
+            if (role === 'TEACHER') {
                 let nip = $('input[name=editNip]').val()
                 let degree = $('select[name=editDegree]').val()
 

@@ -96,9 +96,9 @@ class ExperienceService
 
         Validator::make($experience->toArray(), [
             'user_id' => 'required',
-            'grade' => 'required|integer',
             'experience_point' => 'required|integer',
             'level' => 'required|integer',
+            'grade' => 'required|integer'
         ])->validate();
 
         return $experience;

@@ -18,6 +18,7 @@ class CreateClassTable extends Migration
             $table->uuid('id')->primary()->default(DB::raw('(UUID())'));
             $table->string('code')->unique();
             $table->string('level');
+            $table->smallInteger('grade');
             $table->integer('capacity');
             $table->string('status')->default('active');
             $table->timestamps();

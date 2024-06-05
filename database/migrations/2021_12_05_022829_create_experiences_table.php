@@ -18,6 +18,7 @@ class CreateExperiencesTable extends Migration
             $table->foreignUuid('user_id')->index()->constrained('users')->cascadeOnDelete();
             $table->integer('experience_point');
             $table->integer('level');
+            $table->smallInteger('grade');
             $table->timestamps();
         });
     }

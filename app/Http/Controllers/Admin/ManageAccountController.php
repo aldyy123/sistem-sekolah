@@ -7,6 +7,7 @@ use App\Exports\TeacherExport;
 use App\Imports\StudentImport;
 use App\Imports\TeacherImport;
 use App\Http\Controllers\Controller;
+use App\Models\Classroom;
 use App\Service\Database\ClassroomService;
 use App\Service\Database\ExperienceService;
 use App\Service\Database\StudentService;
@@ -33,6 +34,9 @@ class ManageAccountController extends Controller
     {
         $faker = Factory::create();
         $userDB = new UserService;
+        $classroomService = new ClassroomService;
+        $studentService = new StudentService;
+        $teacherService = new TeacherService;
         $experienceDB = new ExperienceService;
         $username = strtolower(explode(' ', $request->name)[0] . $faker->numerify('####'));
 
@@ -43,18 +47,37 @@ class ManageAccountController extends Controller
             'role' => $request->role,
             'email' => $request->email,
             'status' => 1,
+            'phone' => $request->phone,
+            'address' => $request->address,
         ];
-
-        if ($request->role === 'STUDENT') {
-            $payload['nis'] = $request->nis;
-            $payload['grade'] = $request->grade;
-        }
 
         $create = $userDB->create($payload);
 
         if ($request->role === 'STUDENT') {
-            $experienceDB->create($create->id, ['grade' => $payload['grade'] ?? null, 'experience_point' => 0, 'level' => 0]);
+            $codeClassroom = $classroomService->getClassroomByCode($request->grade);
+
+            $studentPayload = [
+                'nis'=> $request->nis,
+                'batch_id' => $request->batch,
+                'degree' => $request->degree,
+                'classroom_id'=> $codeClassroom->id,
+                'user_id' => $create->id,
+                'last_education' => $request->last_education,
+            ];
+            $studentService->create($studentPayload);
+            $experienceDB->create($create->id, ['grade' => Classroom::LEVELGRADE[$request->grade] ?? null, 'experience_point' => 0, 'level' => 0]);
         }
+
+
+        if ($request->role === 'TEACHER') {
+            $payload['nip'] = $request->nip;
+            $payload['degree'] = $request->degree;
+            $payload['last_education'] = $request->last_education;
+            $payload['user_id'] = $create->id;
+
+            $teacherService->create($payload);
+        }
+
         return response()->json($create);
     }
 

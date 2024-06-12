@@ -11,3 +11,4 @@
 </li>
 <li class="{{ Request::is('subjects') ? 'active' : '' }}"><a href="{{ route('admin.subjects') }}"><i class="icon-book-open"></i><span>Kelola Mapel</span></a></li>
 <li class="{{ Request::is('batch*') ? 'active' : '' }}"><a href="{{ route('admin.batchs') }}"><i class="fa fa-hashtag"></i><span>Kelola Angkatan</span></a></li>
+<li class="{{ Request::is('jadwal') ? 'active' : '' }}"><a href="{{ route('admin.schedule') }}"><i class="fa fa-calendar"></i><span>Kelola Jadwal</span></a></li>

@@ -36,7 +36,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Mapel</th>
-                                        <th>Tim Guru</th>
+                                        <th>Guru Pengampu</th>
                                         <th>Pilih Guru</th>
                                         <th>Edit Mapel</th>
                                     </tr>

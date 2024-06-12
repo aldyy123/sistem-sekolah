@@ -20,6 +20,7 @@ class CreateTeachersTable extends Migration
             $table->string('nip')->unique()->nullable();
             $table->string('degree')->nullable();
             $table->string('last_education')->nullable();
+            $table->foreignUuid('schedules_id')->nullable()->index()->constrained('schedules')->cascadeOnDelete();
             $table->timestamps();
         });
     }

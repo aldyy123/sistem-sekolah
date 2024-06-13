@@ -8,21 +8,21 @@
             <nav aria-label="breadcrumb" class="mt-4">
                 <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                <li class="breadcrumb-item active" aria-current="page">List Bab</li>
+                <li class="breadcrumb-item active" aria-current="page">List Pembahasan</li>
                 </ol>
             </nav>
         </div>
     </div>
 
     <div id="render-topic" style="display: none;">
-        
+
     </div>
 
     <div class="" id="loading-topic" style="display: none;">
         <div class="row-clearfix mt-5">
             <h5 class="color-blue-2 font-weight-bold text-uppercase">........</h5>
             <div class="d-flex justify-content-between mt-3 align-items-end font-weight-bold">
-                <a class="color-black">Terdapat <span class="color-blue-2">...</span> Bab!</a>
+                <a class="color-black">Terdapat <span class="color-blue-2">...</span> Pembahasan!</a>
                 <a href="javascript::void(0)" class="color-blue-2">... <i class="fa fa-chevron-right color-blue-2 font-12"></i></a>
             </div>
             <div class="mt-3">
@@ -69,23 +69,23 @@
             },
             success: function (response) {
                 renderCourseTopic(response);
-            }, 
+            },
             error: function (e) {
                 swal('Gagal Mengambil Data !')
             }
         });
     }
-    
+
     function renderCourseTopic(data) {
         let html = ``
 
             html += `
             <div class="row-clearfix mt-5">
-                <h5 class="color-blue-2 font-weight-bold text-uppercase">${subject.name} | ${course.description}</h5>
+                <h5 class="color-blue-2 font-weight-bold text-uppercase">${subject.name} | kelas ${course.grade} | ${course.description}</h5>
                 <div class="d-flex justify-content-between mt-3 align-items-end font-weight-bold">
-                    <a class="color-black">Terdapat <span class="color-blue-2">${data.total}</span> Materi!</a>
+                    <a class="color-black">Terdapat <span class="color-blue-2">${data.total}</span> Pembahasan!</a>
                 </div>`
-                $.each(data.data, function (key, topic) { 
+                $.each(data.data, function (key, topic) {
                     html += `
                     <div class="mt-3">
                         <a href="{{ url('subject/${subject.id}/course/${course.id}/topic/${topic.id}') }}" class="d-flex align-items-center p-2 w-100 bg-white shadow-sm rounded border-hover">
@@ -102,7 +102,7 @@
 
         html += `
         <div class="mt-4 pl-3">
-            <a href="#" class="mt-3 color-blue-2" data-toggle="modal" data-target="#modal-add-topic">+ Tambah Bab</a>
+            <a href="#" class="mt-3 color-blue-2" data-toggle="modal" data-target="#modal-add-topic">+ Tambah Pembahasan</a>
         </div>
         `
 
@@ -114,7 +114,7 @@
     function createCourseTopic() {
         name = $("input[type=text][name=name]").val();
         button = $("#btn-create")
-        
+
         if (name === '') {
             swal('Nama materi harus diisi !')
         } else {

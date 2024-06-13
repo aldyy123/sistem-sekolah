@@ -15,8 +15,12 @@
         <div class="col-lg-12">
             <div class="card">
                 <ul class="nav nav-tabs">
+                @foreach ($schedules['data'] as $key => $class)
+                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#addSubject">{{ $class['classroom']['code'] }}</a></li>
+                @endforeach
                     <li class="nav-item"><a class="nav-link active show" data-toggle="tab" href="#mapel">Mapel</a></li>
                     <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#addSubject">Tambah Mapel</a></li>
+
                 </ul>
                 <div class="tab-content mt-0">
                     <div class="tab-pane show active" id="mapel">
@@ -42,8 +46,10 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($schedules['data'] as $key => $schedule)
+
                                     <tr>
-                                        @if($schedule['days'] === 'Senin')
+                                        @if($schedule['days'] === 'Senin' && $schedule['classroom']['code'] === '')
+
                                         <td>
                                             <div>
                                                 <div class="d-flex gap-2">

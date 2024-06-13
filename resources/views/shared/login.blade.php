@@ -33,7 +33,7 @@
                     @include('shared.svg.login-svg')
                 </div>
                 <form class="form-auth-small my-auto" action="{{route('auth')}}" method="post">
-                    <img src="{{asset('assets/images/logo-with-name-learnifyid.svg')}}" alt="Smart School Logo" class="img-fluid">
+                    <img src="{{asset('assets/images/logo-bimble-class.png')}}" alt="Smart School Logo" class="img-fluid">
                     {{ csrf_field() }}
 
                     <p class="text-center" style="font-size: 12px;">Silahkan masukan username & password anda.</p>

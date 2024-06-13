@@ -48,7 +48,7 @@
                                     @foreach ($schedules['data'] as $key => $schedule)
 
                                     <tr>
-                                        @if($schedule['days'] === 'Senin' && $schedule['classroom']['code'] === '')
+                                        @if($schedule['days'] == 'Senin')
 
                                         <td>
                                             <div>
@@ -61,6 +61,7 @@
                                                     <p>{{ $schedule['subject']['name'] }}</p>
                                                     <p> - </p>
                                                     <p>{{ $schedule['classroom']['code'] }}</p>
+                                                    <p>{{ $schedule['days'] }}</p>
                                                 </div>
                                             </div>
                                         </td>
@@ -78,6 +79,7 @@
                                                     <p>{{ $schedule['subject']['name'] }}</p>
                                                     <p> - </p>
                                                     <p>{{ $schedule['classroom']['code'] }}</p>
+
                                                 </div>
                                             </div>
                                         </td>

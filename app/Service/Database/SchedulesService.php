@@ -35,25 +35,50 @@ class SchedulesService
         return $contents->toArray();
     }
 
-    public function create(Schedule $schedule){
+    public function create(Schedule $schedule)
+    {
         $schedule->save();
 
         return $schedule->toArray();
     }
 
-    public function filled(Schedule $schedule, array $attributes){
+    public function filled(Schedule $schedule, array $attributes)
+    {
         foreach ($attributes as $key => $value) {
             $schedule->$key = $value;
         }
 
         Validator::make($schedule->toArray(), [
-            'start_time' => 'required',
-            'end_time' => 'required|after:start_time',
+            'time_start' => 'required',
+            'time_end' => 'required|after:time_start',
             'classroom_id' => 'required|string',
             'subject_id' => 'required|string',
             'days' => 'required|string',
         ])->validate();
 
         return $schedule;
+    }
+
+    public function getById(string $id): Schedule | bool
+    {
+        $schedule = Schedule::findOrFail($id);
+
+        if (!$schedule) {
+            return false;
+        }
+
+        return $schedule;
+    }
+
+    public function delete(Schedule $schedule)
+    {
+        $result = $schedule->delete();
+
+
+        if (!$result) {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -65,6 +65,7 @@ Route::group(['middleware' => ['auth', 'role:ADMIN']], function(){
 
         Route::get('/schedule', [Admin\ManageSchedule::class, 'index'])->name('schedule');
         Route::post('/schedule', [Admin\ManageSchedule::class, 'store'])->name('schedule.store');
+        Route::delete('/schedule/{id}', [Admin\ManageSchedule::class, 'destroy'])->name('schedule.destroy');
 
         Route::get('/account', [Admin\ManageAccountController::class, 'getAccount']);
         Route::post('/account', [Admin\ManageAccountController::class, 'createAccount']);

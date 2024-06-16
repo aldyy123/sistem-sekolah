@@ -6,11 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Subject;
 use App\Models\Classroom;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class Schedule extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUuids;
 
+    protected $table = 'schedules';
+    public $keyType = 'string';
     public $incrementing = false;
 
     protected $fillable = [

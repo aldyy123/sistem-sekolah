@@ -63,12 +63,12 @@ class ManageSchedule extends Controller
         $schedules = new SchedulesService;
 
         $data = $schedules->filled(new Schedule, $request->all());
-        $data = $data->create($data);
+        $data = $schedules->create($data);
 
         return response()->json([
-            'data' => $data,
-            'message' => 'Success Created '
-        ]);
+            'status' => 'Success Created Schedule',
+            'data' => $data
+        ], 200);
 
    }
 
@@ -101,6 +101,15 @@ class ManageSchedule extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $schedules = new SchedulesService;
+        $scheduleExist = $schedules->getById($id);
+
+        if (!$scheduleExist) {
+            return redirect()->back()->with('status', 'Schedule Not Found');
+        }
+
+        $schedules->delete($scheduleExist);
+
+        return redirect()->back()->with('status', 'Success Deleted Schedule');
     }
 }

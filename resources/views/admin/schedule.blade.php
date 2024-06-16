@@ -1,337 +1,170 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="block-header">
-        <div class="clearfix mb-3">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('admin.subjects') }}">Bimble Class</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Kelola Jadwal Pelajaran</li>
-                </ol>
-            </nav>
-            <h1 class="color-blue-2 font-weight-bold my-4" style="font-size: 1.8rem;">Kelola Jadwal Pelajaran</h1>
-        </div>
-        <div class="row clearfix">
-            <div class="col-lg-12">
-                <div class="card">
-                    <ul class="nav nav-tabs">
-                        <li class="nav-item"><a class="nav-link active show" data-toggle="tab" href="#mapel">Mapel</a></li>
-                        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#addSubject">Tambah Mapel</a></li>
-                    </ul>
-                    <div class="tab-content mt-0">
-                        <div class="tab-pane show active" id="mapel">
-                            <div class="row my-3">
-                                <div class="col-lg-8 col-md-12 col-sm-12"></div>
-                                <div class="col-lg-4 col-md-12 col-sm-12">
-                                    <div class="input-group">
-                                        <input type="search" class="form-control bg-white rounded text-dark"
-                                            placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-                                        <button type="button" class="btn btn-outline-primary"><i
-                                                class="icon-magnifier"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <h2>Senin</h2>
-                                    <div class="card rounded" style="width: 18rem;">
-                                        <div class="card-body">
-                                            @foreach ($schedules['data'] as $key => $schedule)
-                                                <div>
-                                                    <div
-                                                        class="{{ $loop->iteration === sizeof($schedules['data']) ? '' : 'border-bottom' }} mb-2">
-                                                        <p>
-                                                            <span
-                                                                class="font-weight-bold">{{ isset($schedule['subject']['name']) ? $schedule['subject']['name'] : 'Belum Ada' }}</span>
-                                                            <span> - </span>
-                                                            <span>{{ $schedule['classroom']['code'] }}</span>
-                                                        </p>
-                                                        <p>
-                                                            <span>{{ \Carbon\Carbon::parse($schedule['time_start'])->format('h:m') }}</span>
-                                                            <span> - </span>
-                                                            <span>
-                                                                {{ \Carbon\Carbon::parse($schedule['time_end'])->format('h:m') }}</span>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <h2>Senin</h2>
-                                    <div class="card rounded" style="width: 18rem; background-color: #17C2D7;">
-                                        <div class="card-body">
-                                            @foreach ($schedules['data'] as $key => $schedule)
-                                                <div>
-                                                    <div
-                                                        class="{{ $loop->iteration === sizeof($schedules['data']) ? '' : 'border-bottom' }} mb-2">
-                                                        <p>
-                                                            <span
-                                                                class="font-weight-bold">{{ isset($schedule['subject']['name']) ? $schedule['subject']['name'] : 'Belum Ada' }}</span>
-                                                            <span> - </span>
-                                                            <span>{{ $schedule['classroom']['code'] }}</span>
-                                                        </p>
-                                                        <p>
-                                                            <span>{{ \Carbon\Carbon::parse($schedule['time_start'])->format('h:m') }}</span>
-                                                            <span> - </span>
-                                                            <span>
-                                                                {{ \Carbon\Carbon::parse($schedule['time_end'])->format('h:m') }}</span>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <h2>Senin</h2>
-                                    <div class="card">
-                                        <div class="d-flex flex-column">
-                                            @foreach ($schedules['data'] as $key => $schedule)
-                                                @if ($schedule['days'] === 'Senin')
-                                                    <div>
-                                                        <div class="d-flex gap">
-                                                            <p>{{ \Carbon\Carbon::parse($schedule['time_start'])->format('h:m') }}
-                                                            </p>
-                                                            <p> - </p>
-                                                            <p>{{ \Carbon\Carbon::parse($schedule['time_end'])->format('h:m') }}
-                                                            </p>
-                                                        </div>
-                                                        <div class="d-flex gap">
-                                                            <p>{{ $schedule['subject']['name'] }}</p>
-                                                            <p> - </p>
-                                                            <p>{{ $schedule['classroom']['code'] }}</p>
-                                                        </div>
-                                                    </div>
-                                                @endif
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <h2>Senin</h2>
-                                    <div class="card">
-                                        <div class="d-flex flex-column">
-                                            @foreach ($schedules['data'] as $key => $schedule)
-                                                @if ($schedule['days'] === 'Senin')
-                                                    <div>
-                                                        <div class="d-flex gap">
-                                                            <p>{{ \Carbon\Carbon::parse($schedule['time_start'])->format('h:m') }}
-                                                            </p>
-                                                            <p> - </p>
-                                                            <p>{{ \Carbon\Carbon::parse($schedule['time_end'])->format('h:m') }}
-                                                            </p>
-                                                        </div>
-                                                        <div class="d-flex gap">
-                                                            <p>{{ $schedule['subject']['name'] }}</p>
-                                                            <p> - </p>
-                                                            <p>{{ $schedule['classroom']['code'] }}</p>
-                                                        </div>
-                                                    </div>
-                                                @endif
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <h2>Senin</h2>
-                                    <div class="card">
-                                        <div class="d-flex flex-column">
-                                            @foreach ($schedules['data'] as $key => $schedule)
-                                                @if ($schedule['days'] === 'Senin')
-                                                    <div>
-                                                        <div class="d-flex gap">
-                                                            <p>{{ \Carbon\Carbon::parse($schedule['time_start'])->format('h:m') }}
-                                                            </p>
-                                                            <p> - </p>
-                                                            <p>{{ \Carbon\Carbon::parse($schedule['time_end'])->format('h:m') }}
-                                                            </p>
-                                                        </div>
-                                                        <div class="d-flex gap">
-                                                            <p>{{ $schedule['subject']['name'] }}</p>
-                                                            <p> - </p>
-                                                            <p>{{ $schedule['classroom']['code'] }}</p>
-                                                        </div>
-                                                    </div>
-                                                @endif
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <h2>Senin</h2>
-                                    <div class="card">
-                                        <div class="d-flex flex-column">
-                                            @foreach ($schedules['data'] as $key => $schedule)
-                                                @if ($schedule['days'] === 'Senin')
-                                                    <div>
-                                                        <div class="d-flex gap">
-                                                            <p>{{ \Carbon\Carbon::parse($schedule['time_start'])->format('h:m') }}
-                                                            </p>
-                                                            <p> - </p>
-                                                            <p>{{ \Carbon\Carbon::parse($schedule['time_end'])->format('h:m') }}
-                                                            </p>
-                                                        </div>
-                                                        <div class="d-flex gap">
-                                                            <p>{{ $schedule['subject']['name'] }}</p>
-                                                            <p> - </p>
-                                                            <p>{{ $schedule['classroom']['code'] }}</p>
-                                                        </div>
-                                                    </div>
-                                                @endif
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table table-hover table-custom spacing8">
-                                    <thead>
-                                        <tr>
-                                            <th>Senin</th>
-                                            <th>Selasa</th>
-                                            <th>Rabu</th>
-                                            <th>Kamis</th>
-                                            <th>Jumat</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($schedules['data'] as $key => $schedule)
-                                            <tr>
-                                                @if ($schedule['days'] === 'Senin')
-                                                    <td>
-                                                        <div>
-                                                            <div class="d-flex gap-2">
-                                                                <p>{{ \Carbon\Carbon::parse($schedule['time_start'])->format('h:m') }}
-                                                                </p>
-                                                                <p> - </p>
-                                                                <p>{{ \Carbon\Carbon::parse($schedule['time_end'])->format('h:m') }}
-                                                                </p>
-                                                            </div>
-                                                            <div class="d-flex gap-2">
-                                                                <p>{{ $schedule['subject']['name'] }}</p>
-                                                                <p> - </p>
-                                                                <p>{{ $schedule['classroom']['code'] }}</p>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                @else
-                                                    <td style="background: none!important;"></td>
-                                                @endif
+<div class="block-header">
+    <div class="clearfix mb-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('admin.subjects') }}">Bimble Class</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Kelola Jadwal</li>
+            </ol>
+        </nav>
+        <h1 class="color-blue-2 font-weight-bold my-4" style="font-size: 1.8rem;">Kelola Jadwal</h1>
+    </div>
+    <div class="row clearfix">
+        <div class="col-lg-12">
+            <div class="card">
+                <ul class="nav nav-tabs">
+                    @foreach($classrooms['data'] as $key => $classroom)
+                    {{-- @dd($classroom) --}}
+                    <li class="nav-item">
+                        <form action="{{ route('admin.schedule') }}" method="GET">
+                            <input name="classroom_id" type="text" hidden value="{{ $classroom['id'] }}">
+                            <button class="nav-link tab-item {{ $classroom['id'] === $query ? " active show" : "" }}">{{
+                                $classroom['code'] }}</button>
+                        </form>
+                    </li>
+                    @endforeach
+                    <li class="nav-item"><a class="nav-link tab-nav" data-toggle="tab" href="#addJadwal">Tambah
+                            Jadwal</a></li>
+                </ul>
+                <div class="tab-content mt-3">
 
-                                                @if ($schedule['days'] === 'Selasa')
-                                                    <td>
-                                                        <div>
-                                                            <div class="d-flex gap-2">
-                                                                <p>{{ \Carbon\Carbon::parse($schedule['time_start'])->format('h:m') }}
-                                                                </p>
-                                                                <p> - </p>
-                                                                <p>{{ \Carbon\Carbon::parse($schedule['time_end'])->format('h:m') }}
-                                                                </p>
-                                                            </div>
-                                                            <div class="d-flex gap-2">
-                                                                <p>{{ $schedule['subject']['name'] }}</p>
-                                                                <p> - </p>
-                                                                <p>{{ $schedule['classroom']['code'] }}</p>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                @else
-                                                    <td></td>
-                                                @endif
-                                                @if ($schedule['days'] === 'Rabu')
-                                                    <td>
-                                                        <div>
-                                                            <div class="d-flex gap-2">
-                                                                <p>{{ \Carbon\Carbon::parse($schedule['time_start'])->format('h:m') }}
-                                                                </p>
-                                                                <p> - </p>
-                                                                <p>{{ \Carbon\Carbon::parse($schedule['time_end'])->format('h:m') }}
-                                                                </p>
-                                                            </div>
-                                                            <div class="d-flex gap-2">
-                                                                <p>{{ $schedule['subject']['name'] }}</p>
-                                                                <p> - </p>
-                                                                <p>{{ $schedule['classroom']['code'] }}</p>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                @else
-                                                    <td></td>
-                                                @endif
-                                                @if ($schedule['days'] === 'Kamis')
-                                                    <td>
-                                                        <div>
-                                                            <div class="d-flex gap-2">
-                                                                <p>{{ \Carbon\Carbon::parse($schedule['time_start'])->format('h:m') }}
-                                                                </p>
-                                                                <p> - </p>
-                                                                <p>{{ \Carbon\Carbon::parse($schedule['time_end'])->format('h:m') }}
-                                                                </p>
-                                                            </div>
-                                                            <div class="d-flex gap-2">
-                                                                {{-- <p>{{ $schedule['subject']['name'] }}</p> --}}
-                                                                <p> - </p>
-                                                                <p>{{ $schedule['classroom']['code'] }}</p>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                @else
-                                                    <td></td>
-                                                @endif
-                                                @if ($schedule['days'] === 'Jumat')
-                                                    <td>
-                                                        <div>
-                                                            <div class="d-flex gap-2">
-                                                                <p>{{ \Carbon\Carbon::parse($schedule['time_start'])->format('h:m') }}
-                                                                </p>
-                                                                <p> - </p>
-                                                                <p>{{ \Carbon\Carbon::parse($schedule['time_end'])->format('h:m') }}
-                                                                </p>
-                                                            </div>
-                                                            <div class="d-flex gap-2">
-                                                                <p>{{ $schedule['subject']['name'] }}</p>
-                                                                <p> - </p>
-                                                                <p>{{ $schedule['classroom']['code'] }}</p>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                @else
-                                                    <td></td>
-                                                @endif
-                                                {{-- <td>{{$schedule['teacher_details'] ? $schedule['teacher_details_string'] : 'Belum dipilih'}}</td> --}}
-                                                {{-- <td>
-                                            <button type="button" class="btn btn-sm btn-default" title="Edit" data-toggle="modal" onclick="openAssignModal('{{$subject['name']}}', '{{$subject['id']}}', '{{$subject['subject_teacher']['id']}}', '{{$key}}')"><i class="icon-user"></i></button>
-                                        </td>
-                                        <td>
-                                            <button type="button" class="btn btn-sm btn-default" title="Edit" data-toggle="modal" onclick="openEditModal('{{$subject['name']}}', '{{$subject['id']}}')"><i class="fa fa-edit"></i></button>
-                                        </td> --}}
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="addSubject">
-                            <div class="body mt-2">
-                                <form method="POST" action="{{ url('/subjects') }}">
-                                    @csrf
-                                    <div class="form-group">
-                                        <label>Mata Pelajaran</label>
-                                        <input type="text" class="form-control text-dark" name="subject_name">
+                    @foreach($classrooms['data'] as $key => $classroom)
+                    <x-panel-schedule :schedules="$schedulesArray" :classroom="$classroom" />
+                    @endforeach
+
+                    <div class="tab-pane" id="addJadwal">
+                        <div id="error-header" role="alert"></div>
+                        <div class="body mt-2">
+                            <form>
+                                @csrf
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label>Jam mulai</label>
+                                            <input type="time" id="start_time" name="start_time"
+                                                value="{{ old('start_time') }}" class="form-control text-dark"
+                                                name="start_periode">
+                                        </div>
                                     </div>
-                                    <div class="d-flex justify-content-end mt-3">
-                                        <button type="submit" class="btn btn-primary">Tambah</button>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label>Jam akhir</label>
+                                            <input type="time" id="end_time" name="end_time"
+                                                value="{{ old('end_time') }}" class="form-control text-dark"
+                                                name="end_periode">
+                                        </div>
                                     </div>
-                                </form>
-                            </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label>Mapel</label>
+                                            <select class="custom-select" id="mapel" value="{{ old('mapel') }}"
+                                                name="mapel">
+                                                <option disabled>Select Mapel</option>
+                                                @foreach ($mapel['data'] as $subject)
+                                                <option value="{{ $subject['id'] }}">{{ $subject['name'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label>Hari</label>
+                                            <select class="custom-select" id="days" value="{{ old('days') }}"
+                                                name="days">
+                                                <option disabled>Select Days</option>
+                                                <option value="Senin">Senin</option>
+                                                <option value="Selasa">Selasa</option>
+                                                <option value="Rabu">Rabu</option>
+                                                <option value="Kamis">Kamis</option>
+                                                <option value="Jumat">Jumat</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label>Kelas</label>
+                                            <select class="custom-select" id="classroom" value="{{ old('classroom') }}"
+                                                name="classroom" aria-label="Default select example">
+                                                <option disabled>Select Kelas</option>
+                                                @foreach($classrooms['data'] as $key => $classroom)
+                                                <option value="{{  $classroom['id'] }}">
+                                                    {{ $classroom['code'] }}
+                                                </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end mt-3">
+                                    <button type="submit" class="btn btn-primary">Tambah</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
-        {{-- @include('layouts.admin._modal_edit_subject') --}}
-        {{-- @include('layouts.admin._modal_edit_assign_subject') --}}
+
     </div>
+    @include('layouts.admin._modal_edit_batchs')
+    @include('layouts.admin._modal_delete_batchs')
+</div>
+@endsection
+
+@section('script')
+<script>
+    $('.tab-nav').on('click', function () {
+            $('.tab-item').removeClass('active show')
+        })
+
+        const renderError = (errors) => {
+            let text = ''
+            $.each(errors, (i, value) => {
+                text += `<li>${value}</li>`
+            })
+
+            $('#error-header').addClass('alert-danger alert')
+            $('#error-header').html(text)
+        }
+
+        const storeSchedule = () => {
+            const classroomId = $('#classroom').val()
+            const startTime = $('#start_time').val()
+            const endTime = $('#end_time').val()
+            const mapel = $('#mapel').val()
+            const days = $('#days').val()
+
+              $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                url: "{!! route('admin.schedule.store') !!}",
+                method: 'POST',
+                data: {
+                    classroom_id: classroomId,
+                    start_time: startTime,
+                    end_time: endTime,
+                    subject_id: mapel,
+                    days: days
+                },
+                success: function (response) {
+                    console.log(response)
+                },
+                error: function (error) {
+                    renderError(error.responseJSON.errors)
+                }
+            })
+        }
+
+        $('form').on('submit', function (e) {
+            e.preventDefault()
+            storeSchedule()
+        })
+</script>
 @endsection

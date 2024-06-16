@@ -63,7 +63,8 @@ Route::group(['middleware' => ['auth', 'role:ADMIN']], function(){
         Route::post('/assign-subject', [SubjectController::class, 'assign']);
         Route::patch('/subjects', [SubjectController::class, 'update']);
 
-        Route::get('/jadwal', [Admin\ManageSchedule::class, 'index'])->name('schedule');
+        Route::get('/schedule', [Admin\ManageSchedule::class, 'index'])->name('schedule');
+        Route::post('/schedule', [Admin\ManageSchedule::class, 'store'])->name('schedule.store');
 
         Route::get('/account', [Admin\ManageAccountController::class, 'getAccount']);
         Route::post('/account', [Admin\ManageAccountController::class, 'createAccount']);

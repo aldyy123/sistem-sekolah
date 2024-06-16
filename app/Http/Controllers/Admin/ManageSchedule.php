@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Classroom;
+use App\Models\Schedule;
+use App\Service\Database\ClassroomService;
 use App\Service\Database\SchedulesService;
+use App\Service\Database\SubjectService;
 use Illuminate\Http\Request;
 
 class ManageSchedule extends Controller
@@ -11,12 +15,35 @@ class ManageSchedule extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $query = $request->query();
         $schedules = new SchedulesService;
-        $list = $schedules->index();
+        $classrooms = new ClassroomService;
+        $subjects = new SubjectService;
+
+        $listClassroom = $classrooms->index([
+            'order_by' => 'asc'
+        ]);
+
+        $classroom_id = $query['classroom_id'] ?? $listClassroom['data'][0]['id'];
+
+        $list = $schedules->index([
+            'classroom_id' => $classroom_id,
+        ]);
+
+        $listClassroom = $classrooms->index([
+            'order_by' => 'asc'
+        ]);
+
+        $mapel = $subjects->index();
+
+
         return view('admin.schedule', [
-            'schedules' => $list
+            'schedulesArray' => ['data' => $list],
+            'classrooms' => $listClassroom,
+            'query' => $classroom_id,
+            'mapel' => $mapel
         ]);
     }
 
@@ -33,8 +60,17 @@ class ManageSchedule extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $schedules = new SchedulesService;
+
+        $data = $schedules->filled(new Schedule, $request->all());
+        $data = $data->create($data);
+
+        return response()->json([
+            'data' => $data,
+            'message' => 'Success Created '
+        ]);
+
+   }
 
     /**
      * Display the specified resource.

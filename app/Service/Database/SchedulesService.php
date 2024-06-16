@@ -3,6 +3,7 @@
 namespace App\Service\Database;
 
 use App\Models\Schedule;
+use Illuminate\Support\Facades\Validator;
 
 class SchedulesService
 {
@@ -29,8 +30,30 @@ class SchedulesService
             $query->where('subject_id', $subject_id);
         }
 
-        $contents = $query->with(['classroom', 'subject'])->simplePaginate($per_page);
+        $contents = $query->with(['classroom', 'subject'])->get();
 
         return $contents->toArray();
+    }
+
+    public function create(Schedule $schedule){
+        $schedule->save();
+
+        return $schedule->toArray();
+    }
+
+    public function filled(Schedule $schedule, array $attributes){
+        foreach ($attributes as $key => $value) {
+            $schedule->$key = $value;
+        }
+
+        Validator::make($schedule->toArray(), [
+            'start_time' => 'required',
+            'end_time' => 'required|after:start_time',
+            'classroom_id' => 'required|string',
+            'subject_id' => 'required|string',
+            'days' => 'required|string',
+        ])->validate();
+
+        return $schedule;
     }
 }

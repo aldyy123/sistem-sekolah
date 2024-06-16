@@ -2,14 +2,14 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white" id="exampleModalLabel">Tambah Ulasan</h5>
+                <h5 class="modal-title text-white" id="exampleModalLabel">Tambah Materi</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="resetValue()">
                     <span aria-hidden="true" class="text-white">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="name" class="col-form-label">Judul Ulasan</label>
+                    <label for="name" class="col-form-label">Judul Materi</label>
                     <input type="text" class="form-control text-dark" name="title_content" id="name" placeholder="Masukkan judul ulasan baru">
                 </div>
             </div>

@@ -9,12 +9,12 @@
                 <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
                 <li class="breadcrumb-item"><a href="{{ url('/subject/'. $subject['id'] .'/course/'. $course['id']) }}">List Bab</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Detail Bab</li>
+                <li class="breadcrumb-item active" aria-current="page">Detail Pembahasan</li>
                 </ol>
             </nav>
         </div>
     </div>
-    <h5 class="color-blue-2 font-weight-bold text-uppercase">{{ $subject['name'] }} | {{ $course['description'] }} | {{ $topic['name'] }}</h5>
+    <h5 class="color-blue-2 font-weight-bold text-uppercase">{{ $subject['name'] }} | Kelas {{ $course['grade'] }} | {{ $course['description'] }} | {{ $topic['name'] }}</h5>
     <div class="alert alert-primary my-4 rounded" role="alert">
         <div class="d-flex align-items-center">
             <div class="d-flex align-items-center h4 bg-primary rounded-circle mr-2 mt-2" data-toggle="tooltip" data-placement="top" title="alert"><i class="icon-info text-white"></i></div>
@@ -22,10 +22,10 @@
         </div>
     </div>
     <div class="py-3">
-        <h5 class="color-blue-2 font-weight-bold text-capitalize">daftar ulasan</h5>
+        <h5 class="color-blue-2 font-weight-bold text-capitalize">daftar materi</h5>
         <div class="" id="loading-contents" style="display: none;">
             <div class="d-flex justify-content-between mt-3 align-items-end font-weight-bold">
-                <a class="color-black">Terdapat <span class="color-blue-2">...</span> Ulasan!</a>
+                <a class="color-black">Terdapat <span class="color-blue-2">...</span> Materi!</a>
                 <a href="javascript::void(0)" class="color-blue-2">... <i class="fa fa-chevron-right color-blue-2 font-12"></i></a>
             </div>
             <div class="mt-3">
@@ -40,7 +40,7 @@
         <div id="render-contents" style="display: none;">
         </div>
         <div class="mt-3 pl-3">
-            <a href="#" class="mt-3 color-blue-2" data-toggle="modal" data-target="#modal-add-content">+ Tambah Ulasan</a>
+            <a href="#" class="mt-3 color-blue-2" data-toggle="modal" data-target="#modal-add-content">+ Tambah materi</a>
         </div>
     </div>
     <hr class="bg-black">
@@ -120,21 +120,21 @@
             },
             success: function (response) {
                 renderContents(response);
-            }, 
+            },
             error: function (e) {
                 swal('Gagal Mengambil Data !')
             }
         });
     }
-    
+
     function renderContents(data) {
         let html = ``
         let menuContent = ``
 
             html += `
-            <a class="color-black font-weight-bold">Terdapat <span class="color-blue-2">${data.total}</span> Ulasan!</a>
+            <a class="color-black font-weight-bold">Terdapat <span class="color-blue-2">${data.total}</span> Materi!</a>
             `
-                $.each(data.data, function (key, content) { 
+                $.each(data.data, function (key, content) {
                     html += `
                     <div class="mt-3">
                         <a href="{{url('/subject/'. $subject['id'] .'/course/'. $course['id'] .'/topic/'. $topic['id'] .'/content/${content.id}')}}" class="d-flex align-items-center p-2 w-100 bg-white shadow-sm rounded border-hover">
@@ -161,7 +161,7 @@
     function createContent() {
         name = $("input[type=text][name=title_content]").val();
         button = $("#btn-create-content");
-        
+
         if (name === '') {
             swal('Nama ulasan harus diisi !')
         } else {
@@ -207,7 +207,7 @@
             },
             success: function (response) {
                 renderActivity(response);
-            }, 
+            },
             error: function (e) {
                 swal('Gagal Mengambil Data !')
             }
@@ -220,7 +220,7 @@
         let htmlExam = ``
         let htmlExamMain = ``
 
-        $.each(data.EXAM, function (key, exam) { 
+        $.each(data.EXAM, function (key, exam) {
             htmlExam += `
             <div class="mt-3">
                 <a href="{{url('/subject/'. $subject['id'] .'/course/'. $course['id'] .'/topic/'. $topic['id'] .'/activity/${exam.id}')}}" class="d-flex align-items-center p-2 w-100 bg-white shadow-sm rounded border-hover">
@@ -233,7 +233,7 @@
             `
         });
 
-        $.each(data.EXERCISE, function (key, exercise) { 
+        $.each(data.EXERCISE, function (key, exercise) {
             htmlExercise += `
             <div class="mt-3">
                 <a href="{{url('/subject/'. $subject['id'] .'/course/'. $course['id'] .'/topic/'. $topic['id'] .'/activity/${exercise.id}')}}" class="d-flex align-items-center p-2 w-100 bg-white shadow-sm rounded border-hover">
@@ -276,7 +276,7 @@
     function createExam() {
         name = $("input[type=text][name=nameExam]").val();
         button = $("#btn-exam");
-        
+
         if (name === '') {
             swal('Nama ulangan harus diisi !')
         } else {

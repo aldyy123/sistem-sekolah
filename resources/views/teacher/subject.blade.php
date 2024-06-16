@@ -8,21 +8,21 @@
             <nav aria-label="breadcrumb" class="mt-4">
                 <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Materi</li>
+                <li class="breadcrumb-item active" aria-current="page">Bab</li>
                 </ol>
             </nav>
         </div>
     </div>
-    
+
     <div id="render-course" style="display: none;">
-        
+
     </div>
 
     <div class="" id="loading-course" style="display: none;">
         <div class="row-clearfix mt-5">
             <h5 class="color-blue-2 font-weight-bold text-uppercase">........</h5>
             <div class="d-flex justify-content-between mt-3 align-items-end font-weight-bold">
-                <a class="color-black">Terdapat <span class="color-blue-2">...</span> Materi!</a>
+                <a class="color-black">Terdapat <span class="color-blue-2">...</span> Bab!</a>
                 <a href="javascript::void(0)" class="color-blue-2">... <i class="fa fa-chevron-right color-blue-2 font-12"></i></a>
             </div>
             <div class="mt-3">
@@ -67,13 +67,13 @@
             },
             success: function (response) {
                 renderCourse(response);
-            }, 
+            },
             error: function (e) {
                 swal('Gagal Mengambil Data !')
             }
         });
     }
-    
+
     function renderCourse(data) {
         let html = ``
 
@@ -81,15 +81,15 @@
             <div class="row-clearfix mt-5">
                 <h5 class="color-blue-2 font-weight-bold text-uppercase">${subject.name}</h5>
                 <div class="d-flex justify-content-between mt-3 align-items-end font-weight-bold">
-                    <a class="color-black">Terdapat <span class="color-blue-2">${data.total}</span> Materi!</a>
+                    <a class="color-black">Terdapat <span class="color-blue-2">${data.total}</span> Bab!</a>
                 </div>`
-                $.each(data.data, function (key, course) { 
+                $.each(data.data, function (key, course) {
                     html += `
                     <div class="mt-3">
                         <a href="{{ url('subject/${subject.id}/course/${course.id}') }}" class="d-flex align-items-center p-2 w-100 bg-white shadow-sm rounded border-hover">
                             <div class="d-flex align-items-center justify-content-center w35 bg-blue-2 rounded-circle cursor-pointer ml-2" data-toggle="tooltip" data-placement="top" title="materi"><i class="icon-book-open text-white"></i></div>
                             <div class="ml-3">
-                            <p class="text-dark text-uppercase text-dark pt-3">${subject.name} Kelas ${course.grade} | ${course.description}</p>
+                            <p class="text-dark text-uppercase text-dark pt-3"> Kelas ${course.grade} | ${course.description}</p>
                             </div>
                         </a>
                     </div>
@@ -100,7 +100,7 @@
 
         html += `
         <div class="mt-4 pl-3">
-            <a href="#" class="mt-3 color-blue-2" data-toggle="modal" data-target="#modal-add-course">+ Tambah Materi</a>
+            <a href="#" class="mt-3 color-blue-2" data-toggle="modal" data-target="#modal-add-course">+ Tambah Bab</a>
         </div>
         `
 
@@ -119,7 +119,7 @@
         name = $("input[type=text][name=name]").val();
         grade = $("select[name=grade]").find(":selected").val()
         button = $("#btn-create")
-        
+
         if (name === '') {
             swal('Nama materi harus diisi !')
         } else {
@@ -147,8 +147,8 @@
                 }
             });
         }
-        
+
     }
-    
+
 </script>
 @endsection

@@ -5,7 +5,7 @@
     <div class="clearfix mb-3">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('admin.subjects') }}">Learnify.id</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.subjects') }}">Bimble Class</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Kelola Mapel</li>
             </ol>
         </nav>
@@ -36,7 +36,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Mapel</th>
-                                        <th>Tim Guru</th>
+                                        <th>Guru Pengampu</th>
                                         <th>Pilih Guru</th>
                                         <th>Edit Mapel</th>
                                     </tr>

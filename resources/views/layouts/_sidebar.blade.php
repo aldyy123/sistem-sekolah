@@ -4,7 +4,7 @@
 <div id="left-sidebar" class="sidebar">
     <div class="navbar-brand">
         <a href="{{route('dashboard')}}">
-            <img src="{{asset('assets/images/logo-with-name-learnifyid.svg')}}" alt="Smart School Logo" class="img-fluid">
+            <img src="{{asset('assets/images/logo-bimble-class.png')}}" alt="Smart School Logo" class="img-fluid">
         </a>
         <button type="button" class="btn-toggle-offcanvas btn btn-sm float-right"><i class="lnr lnr-menu icon-close"></i></button>
     </div>
@@ -20,8 +20,8 @@
                     <li><a href="{{ route('change-password') }}" ><i class="icon-lock"></i>Ganti Password</a></li>
                     <li><a href="#" class="js-sweetalert" data-type="confirm-logout"><i class="icon-power"></i>Keluar</a></li>
                 </ul>
-            </div>                
-        </div>  
+            </div>
+        </div>
         <nav id="left-sidebar-nav" class="sidebar-nav">
             <ul id="main-menu" class="metismenu">
                 @if (Auth::user()->role === "ADMIN")
@@ -40,7 +40,7 @@
                         @include('layouts.teacher._menu_exercise')
                     @elseif(Request::is('subject/*') || Request::is('progress/subject/*'))
                         @include('layouts.teacher._menu_subject')
-                    @else 
+                    @else
                         @include('layouts.teacher._menu')
                     @endif
                 @endif
@@ -51,12 +51,12 @@
                         @include('layouts.student._menu_topic')
                     @elseif(Request::is('student/subject/*/course'))
                         @include('layouts.student._menu_subject')
-                    @else 
+                    @else
                         @include('layouts.student._menu')
                     @endif
                 @endif
             </ul>
-        </nav>     
+        </nav>
     </div>
 </div>
 @endif

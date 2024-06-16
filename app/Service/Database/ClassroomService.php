@@ -15,4 +15,26 @@ class ClassroomService
 
         return $classroom;
     }
+
+    public function index($filter = []){
+        $orderBy = $filter['order_by'] ?? 'desc';
+        $per_page = $filter['per_page'] ?? 99;
+        $code = $filter['code'] ?? null;
+        $status = $filter['status'] ?? null;
+
+
+        $query = Classroom::orderBy('grade', $orderBy);
+
+        if ($code !== null) {
+            $query->where('code', $code);
+        }
+
+        if ($status !== null) {
+            $query->where('status', $status);
+        }
+
+        $contents = $query->simplePaginate($per_page);
+
+        return $contents->toArray();
+    }
 }

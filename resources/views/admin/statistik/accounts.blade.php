@@ -17,7 +17,7 @@
             @if (request()->route('role') === 'STUDENT')
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Learnify.id</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Bimble Class</a></li>
                         <li class="breadcrumb-item active">Kelola Akun</li>
                         <li class="breadcrumb-item active" aria-current="page">Akun Siswa</li>
                     </ol>
@@ -57,7 +57,7 @@
                     <div class="tab-content mt-0">
                         <div class="tab-pane show active" id="Users">
                             <div class="row my-3">
-                                <div class="col-lg-8 col-md-12 col-sm-12">
+                                {{-- <div class="col-lg-8 col-md-12 col-sm-12">
                                     @if (request()->route('role') === 'STUDENT')
                                         <a class="btn btn-primary" href="{{ url('/export-excel-student') }}" target="_blank"
                                             rel="noopener noreferrer"><i class="icon-arrow-down mr-2"></i>Export Akun</a>
@@ -65,7 +65,7 @@
                                         <a class="btn btn-primary" href="{{ url('/export-excel-teacher') }}" target="_blank"
                                             rel="noopener noreferrer"><i class="icon-arrow-down mr-2"></i>Export Akun</a>
                                     @endif
-                                </div>
+                                </div> --}}
                                 <div class="col-lg-4 col-md-12 col-sm-12">
                                     <div class="input-group">
                                         <input type="search" class="form-control bg-white rounded text-dark"
@@ -80,14 +80,14 @@
                             @include('admin.statistik._table')
                         </div>
                         <div class="tab-pane" id="addUser">
-                            <div class="d-flex justify-content-between my-3">
+                            {{-- <div class="d-flex justify-content-between my-3">
                                 <div></div>
                                 @if (request()->route('role') === 'STUDENT' || request()->route('role') === 'TEACHER')
                                     <button type="button" class="btn btn-primary" data-toggle="modal"
                                         data-target="#modal-import-account"><i class="icon-arrow-down mr-2"></i>Import
                                         Akun</button>
                                 @endif
-                            </div>
+                            </div> --}}
                             @if (request()->route('role') === 'STUDENT')
                                 @include('admin.statistik.forms.students')
                             @elseif(request()->route('role') === 'TEACHER')

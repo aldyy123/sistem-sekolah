@@ -9,6 +9,7 @@ use App\Service\Database\ClassroomService;
 use App\Service\Database\SchedulesService;
 use App\Service\Database\SubjectService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ManageSchedule extends Controller
 {

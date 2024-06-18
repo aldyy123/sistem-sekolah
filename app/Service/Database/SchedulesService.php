@@ -27,7 +27,7 @@ class SchedulesService
         }
 
         if ($subject_id !== null) {
-            $query->where('subject_id', $subject_id);
+            $query->whereIn('subject_id', $subject_id);
         }
 
         $contents = $query->with(['classroom', 'subject'])->get();

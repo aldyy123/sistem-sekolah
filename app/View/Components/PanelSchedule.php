@@ -14,7 +14,7 @@ class PanelSchedule extends Component
 
      public $schedules;
 
-    public function __construct($schedules, public array $classroom)
+    public function __construct($schedules, public $user)
     {
         $this->schedules = $schedules;
     }

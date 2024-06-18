@@ -4,8 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Experience;
+use App\Service\Database\ClassroomService;
 use Illuminate\Http\Request;
 use App\Service\Database\ExperienceService;
+use App\Service\Database\SchedulesService;
+use App\Service\Database\StudentService;
+use App\Service\Database\SubjectService;
+use App\Service\Database\SubjectTeacherService;
+use App\Service\Database\TeacherService;
 use App\Service\Database\UserService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -50,4 +56,79 @@ class UserController extends Controller
             return view('student.dashboard', compact('pw_matches', 'user', 'experience'));
         }
     }
+
+    public function scheduleDashboard(Request $request){
+        $user = Auth::user();
+
+        $query = $request->query();
+        $schedules = new SchedulesService;
+        $teacher = new TeacherService;
+        $student = new StudentService;
+        $subjectTeacher = new SubjectTeacherService;
+        $classrooms = new ClassroomService;
+        $subjects = new SubjectService;
+
+
+        $listClassroom = $classrooms->index([
+            'order_by' => 'asc'
+        ]);
+
+
+        if($user->role === "ADMIN"){
+            $classroom_id = $query['classroom_id'] ?? $listClassroom['data'][0]['id'];
+
+            $list = $schedules->index([
+                'classroom_id' => $classroom_id,
+            ]);
+
+            $listClassroom = $classrooms->index([
+                'order_by' => 'asc'
+            ]);
+
+            $mapel = $subjects->index();
+
+
+            return view('admin.schedule', [
+                'schedulesArray' => ['data' => $list],
+                'classrooms' => $listClassroom,
+                'query' => $classroom_id,
+                'mapel' => $mapel,
+                'user' => $user
+            ]);
+        }
+
+        if($user->role === "STUDENT"){
+            $experience = Auth::user()->experience;
+            $experience->current_xp = $experience->experience_point % Experience::REQUIRED_XP;
+
+            $user_student = $student->getStudentById($user->id);
+            $list = $schedules->index([
+                'classroom_id' => $user_student->classroom_id,
+            ]);
+
+
+            return view('student.schedule', [
+                'schedulesArray' => ['data' => $list],
+                'experience' => $experience,
+                'user' => $user
+            ]);
+        }
+
+        if($user->role === "TEACHER"){
+            $userTeacher = $teacher->findTeacher($user->id);
+            $list = $subjectTeacher->index([
+                'teacher_id' => $userTeacher->id,
+            ]);
+            $subjects_ids = $subjectTeacher->filterFieldData($list['data'], 'subject_id');
+            $list = $schedules->index([
+                'subject_id' => $subjects_ids,
+            ]);
+
+            return view('teacher.schedule', [
+                'schedulesArray' => ['data' => $list],
+                'user' => $user
+            ]);
+        }
+    }
+
 }

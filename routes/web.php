@@ -38,6 +38,8 @@ Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::group(['middleware' => ['auth', 'role:ADMIN,TEACHER,STUDENT']], function(){
     Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
 
+    Route::get('/schedule', [UserController::class, 'scheduleDashboard'])->name('schedule');
+
     Route::get('/change-password', function () {
         return view('shared.change_password');
     })->name('change-password');
@@ -63,7 +65,7 @@ Route::group(['middleware' => ['auth', 'role:ADMIN']], function(){
         Route::post('/assign-subject', [SubjectController::class, 'assign']);
         Route::patch('/subjects', [SubjectController::class, 'update']);
 
-        Route::get('/schedule', [Admin\ManageSchedule::class, 'index'])->name('schedule');
+        // Route::get('/schedule', [UserController::class, 'scheduleDashboard'])->name('schedule');
         Route::post('/schedule', [Admin\ManageSchedule::class, 'store'])->name('schedule.store');
         Route::delete('/schedule/{id}', [Admin\ManageSchedule::class, 'destroy'])->name('schedule.destroy');
 

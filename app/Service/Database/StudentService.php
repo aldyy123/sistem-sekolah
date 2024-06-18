@@ -28,6 +28,13 @@ class StudentService
         return $student;
     }
 
+    public function getStudentById(string $user_id)
+    {
+        $student = Students::where('user_id', $user_id)->first();
+
+        return $student;
+    }
+
     private function fill(Students $students, array $attributes)
     {
         foreach ($attributes as $key => $value) {

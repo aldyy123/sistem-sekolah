@@ -16,17 +16,20 @@
                 <div class="card">
                     <ul class="nav nav-tabs">
                         @foreach ($classrooms['data'] as $key => $classroom)
-                            {{-- @dd($classroom) --}}
                             <li class="nav-item">
-                                <form action="{{ route('admin.schedule') }}" method="GET">
+                                <form action="{{ route('schedule') }}" method="GET">
                                     <input name="classroom_id" type="text" hidden value="{{ $classroom['id'] }}">
                                     <button
                                         class="nav-link tab-item {{ $classroom['id'] === $query ? ' active show' : '' }}">{{ $classroom['code'] }}</button>
                                 </form>
                             </li>
                         @endforeach
-                        <li class="nav-item"><a class="nav-link tab-nav" data-toggle="tab" href="#addJadwal">Tambah
-                                Jadwal</a></li>
+
+                        <li class="nav-item">
+                            <a class="nav-link tab-nav" data-toggle="tab" href="#addJadwal">
+                                Tambah Jadwal
+                            </a>
+                        </li>
                     </ul>
                     <div class="tab-content mt-3">
                         @if (session('status'))
@@ -36,7 +39,9 @@
                         @endif
 
                         @foreach ($classrooms['data'] as $key => $classroom)
-                            <x-panel-schedule :schedules="$schedulesArray" :classroom="$classroom" />
+                            <div class="tab-pane {{ $classroom['code'] === 'I' ? 'show active' : '' }}" id="jadwal-k{{ $classroom['code'] }}">
+                                <x-panel-schedule :user="$user" :schedules="$schedulesArray" />
+                            </div>
                         @endforeach
 
                         <div class="tab-pane" id="addJadwal">

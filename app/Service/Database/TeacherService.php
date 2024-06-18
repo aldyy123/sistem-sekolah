@@ -19,6 +19,16 @@ class TeacherService
         return $user;
     }
 
+    public function findTeacher(string $user_id){
+        $teacher = Teachers::where('user_id', $user_id)->get()->first();
+
+        if(!$teacher){
+            return null;
+        }
+
+        return $teacher;
+    }
+
     public function create(array $data)
     {
         $user = Teachers::create($data);

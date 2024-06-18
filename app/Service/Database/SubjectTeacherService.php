@@ -22,7 +22,19 @@ class SubjectTeacherService {
 
         $users = $query->with('subject')->simplePaginate($per_page);
 
-        return $users;
+        return $users->toArray();
+    }
+
+    public function filterFieldData(array $data, string $fieldName)
+    {
+        $filtered = [];
+
+        foreach ($data as $key => $value) {
+            if (isset($value[$fieldName])){
+                array_push( $filtered, $value[$fieldName]);
+            }
+        }
+        return $filtered;
     }
 
     public function detail($subjectTeacherId)

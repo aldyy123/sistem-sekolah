@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="block-header">
-    <h4 class="text-white my-sm-3 my-2 text-capitalize">leaderboard {{$schoolDetail['name']}} kelas {{$user->grade}}</h4>
+    {{-- <h4 class="text-white my-sm-3 my-2 text-capitalize">leaderboard {{$schoolDetail['name']}} kelas {{$user->grade}}</h4> --}}
     <div class="row clearfix mt-2">
         <div class="col-md-4 mt-2 mb-3">
             <div class="d-flex flex-column m-auto rounded bg-white shadow">
@@ -46,7 +46,7 @@
                                 <td>#{{$student['rank_order']}}</td>
                                 <td>
                                     <h6 class="mb-0">{{$student['user']['name']}}</h6>
-                                    <span>{{$student['user']['nis'] ? $student['user']['nis'] : '-'}}</span>
+                                    <span>{{$student['student']['nis'] ? $student['student']['nis'] : '-'}}</span>
                                 </td>
                                 <td>{{$student['experience_point']}}</td>
                                 <td>{{$student['level']}}</td>

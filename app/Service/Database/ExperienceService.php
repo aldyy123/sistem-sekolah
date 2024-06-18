@@ -20,7 +20,7 @@ class ExperienceService
         $grade = $filter['grade'] ?? null;
 
 
-        $query = Experience::all();
+        $query = Experience::orderBy('created_at', $orderBy);
 
         if($by_xp) {
             $query->orderBy('experience_point', $orderBy);

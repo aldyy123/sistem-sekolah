@@ -107,7 +107,7 @@ class UserService
             'username' => 'required|string',
             'password' => 'required|string',
             'status' => 'required',
-            'email' => 'nullable|email',
+            'email' => 'email',
             'phone' => 'nullable|string|unique:users,phone',
             'photo' => 'nullable|string',
             'address' => 'nullable|string',

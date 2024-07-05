@@ -40,6 +40,8 @@ class ManageAccountController extends Controller
         $experienceDB = new ExperienceService;
         $username = strtolower(explode(' ', $request->name)[0] . $faker->numerify('####'));
 
+        $this->validationFormEachRole($request);
+
         $payload = [
             'name' => $request->name,
             'username' => $username,
@@ -70,15 +72,79 @@ class ManageAccountController extends Controller
 
 
         if ($request->role === 'TEACHER') {
-            $payload['nip'] = $request->nip;
-            $payload['degree'] = $request->degree;
-            $payload['last_education'] = $request->last_education;
-            $payload['user_id'] = $create->id;
+            $teacherPayload = [
+                'nip' => $request->nip,
+                'degree' => $request->degree,
+                'user_id' => $create->id,
+                'last_education' => $request->last_education,
+            ];
 
-            $teacherService->create($payload);
+            $teacherService->create($teacherPayload);
         }
 
         return response()->json($create);
+    }
+
+    public function validationFormEachRole(Request $request)
+    {
+        $faker = Factory::create();
+        $username = strtolower(explode(' ', $request->name)[0] . $faker->numerify('####'));
+
+        $payloadUser = [
+            'name' => $request->name,
+            'username' => $username,
+            'password' => $username,
+            'role' => $request->role,
+            'email' => $request->email,
+            'status' => 1,
+            'phone' => $request->phone,
+            'address' => $request->address,
+        ];
+
+        if($request->role === 'STUDENT') {
+            $payloadStudent = [
+                'nis' => $request->nis,
+                'batch_id' => $request->batch,
+                'degree' => $request->degree,
+                'classroom_id' => $request->kelas,
+                'last_education' => $request->last_education,
+            ];
+
+            $request->validate([
+                'name' => 'required',
+                'email' => 'required|email',
+                'phone' => 'required',
+                'address' => 'required',
+                'nis' => 'required',
+                'batch' => 'required',
+                'degree' => 'required',
+                'grade' => 'required',
+                'last_education' => 'required',
+            ]);
+            return array_merge($payloadUser, $payloadStudent);
+        }
+
+        if($request->role === 'TEACHER') {
+            $payloadTeacher = [
+                'nip' => $request->nip,
+                'degree' => $request->degree,
+                'last_education' => $request->last_education,
+            ];
+
+            $request->validate([
+                'name' => 'required',
+                'email' => 'required|email',
+                'phone' => 'required',
+                'address' => 'required',
+                'nip' => 'required',
+                'degree' => 'required',
+                'last_education' => 'required',
+            ]);
+
+            return array_merge($payloadUser, $payloadTeacher);
+        }
+
+        return $payloadUser;
     }
 
     public function updateAccount(Request $request)

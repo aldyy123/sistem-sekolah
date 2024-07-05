@@ -27,7 +27,7 @@
     <div class="bg-white mt-3 px-3 py-4 text-dark">
         <form>
             <div class="form-group mb-3">
-                <label for="title">Judul Ulasan</label>
+                <label for="title">Judul Materi</label>
                 <input type="text" class="form-control" id="title" placeholder="Masukkan judul ulasan" name="title">
             </div>
             <div class="form-group mb-3">

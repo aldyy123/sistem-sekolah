@@ -27,7 +27,7 @@
             @if (request()->route('role') === 'TEACHER')
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Learnify.id</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Bimble Class</a></li>
                         <li class="breadcrumb-item active">Kelola Akun</li>
                         <li class="breadcrumb-item active" aria-current="page">Akun Guru</li>
                     </ol>
@@ -37,7 +37,7 @@
             @if (request()->route('role') === 'ADMIN')
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Learnify.id</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Bimble Class</a></li>
                         <li class="breadcrumb-item active">Kelola Akun</li>
                         <li class="breadcrumb-item active" aria-current="page">Akun Admin</li>
                     </ol>
@@ -254,9 +254,17 @@
                 data['last_education'] = lastEducation
             }
 
-            const btnSubmit = $(`#${role}-submit`)
+            if(role === 'TEACHER') {
+                const nip = $(`input[name=${role}Nip]`).val();
+                const degree = $(`select[name=${role}Degree]`).val();
+                const lastEducation = $(`input[name=${role}Last_education]`).val();
 
-            console.log(data);
+                data['nip'] = nip
+                data['degree'] = degree
+                data['last_education'] = lastEducation
+            }
+
+            const btnSubmit = $(`#${role}-submit`)
 
             $.ajax({
                 type: "post",

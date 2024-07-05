@@ -115,11 +115,10 @@ class UserController extends Controller
         }
 
         if($user->role === "TEACHER"){
-            $userTeacher = $teacher->findTeacher($user->id);
             $list = $subjectTeacher->index([
-                'teacher_id' => $userTeacher->id,
-            ]);
-            $subjects_ids = $subjectTeacher->filterFieldData($list['data'], 'subject_id');
+                'teacher_id' => $user->id,
+            ])->toArray();
+            $subjects_ids = $subjectTeacher->filterFieldData($list['data'] ?? [], 'subject_id');
             $list = $schedules->index([
                 'subject_id' => $subjects_ids,
             ]);

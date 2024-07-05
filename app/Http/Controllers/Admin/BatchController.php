@@ -42,7 +42,8 @@ class BatchController extends Controller
         $payload = $request->all();
         $this->batchsService->create($payload);
 
-        return redirect()->route('admin.batchs')->with('success', 'Batch created successfully');
+        // return redirect()->route('admin.batchs')->with('success', 'Batch created successfully');
+        return response()->json(['message' => 'Batch created successfully']);
     }
 
     public function update(Request $request)

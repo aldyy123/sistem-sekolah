@@ -107,24 +107,17 @@
                                 </div>
                                 <form>
                                     <div class="row">
-                                        <div class="col-lg-6">
+                                        {{-- <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label>Year</label>
                                                 <input type="number" placeholder="YYYY" min="2017" max="2100" class="form-control text-dark" name="year">
                                             </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="form-group">
-                                                <label>Kloter</label>
-                                                <input type="number" value="{{ old('cloter') }}"
-                                                    class="form-control text-dark" name="cloter">
-                                            </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label>Start Periode</label>
                                                 <input type="month" value="{{ old('start_periode') }}"
-                                                    class="form-control text-dark" name="start_periode">
+                                                    class="form-control month text-dark" name="start_periode">
                                             </div>
                                         </div>
                                         <div class="col-lg-6">
@@ -132,6 +125,13 @@
                                                 <label>End Periode</label>
                                                 <input type="month" value="{{ old('end_periode') }}"
                                                     class="form-control text-dark" name="end_periode">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label>Kloter</label>
+                                                <input type="number" value="{{ old('cloter') }}"
+                                                    class="form-control text-dark" name="cloter">
                                             </div>
                                         </div>
                                         <div class="col-lg-6">
@@ -164,13 +164,15 @@
 @section('script')
     <script>
         //global variable
+
+        $('.month').MonthPicker();
+
         let allSubjects = {!! json_encode($batchs) !!};
 
         $('form').submit(function(event) {
             event.preventDefault();
 
             const formData = new FormData(this);
-            console.log(formData);
 
             const dataStore = {
                 year: formData.get('year') ?? null,

@@ -10,7 +10,7 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label for="name" class="col-form-label">Judul Materi</label>
-                    <input type="text" class="form-control text-dark" name="title_content" id="name" placeholder="Masukkan judul ulasan baru">
+                    <input type="text" class="form-control text-dark" name="title_content" id="name" placeholder="Masukkan judul materi baru">
                 </div>
             </div>
             <div class="modal-footer">

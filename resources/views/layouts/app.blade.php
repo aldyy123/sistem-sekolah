@@ -14,14 +14,15 @@
 <link rel="stylesheet" href="{{asset('assets/vendor/animate-css/vivify.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/vendor/jvectormap/jquery-jvectormap-2.0.3.css')}}">
 <link rel="stylesheet" href="{{asset('assets/vendor/sweetalert/sweetalert.css')}}">
-
 <link rel="stylesheet" href="{{asset('assets/vendor/c3/c3.min.css')}}"/>
+{{-- <link href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css" /> --}}
 
 <!-- MAIN CSS -->
 <link rel="stylesheet" href="{{asset('assets/css/site.min.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/custom.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/teacher.css')}}">
 <link rel="stylesheet" href="{{asset('assets/css/student.css')}}">
+<link rel="stylesheet" href="{{asset('assets/vendor/jquery-month/MonthPicker.css')}}"/>
 </head>
 <body class="theme-cyan font-montserrat light_version">
 
@@ -78,16 +79,17 @@
 
 {{-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script> --}}
-<script src="{{asset('assets/bundles/libscripts.bundle.js')}}"></script>
+<script src="{{asset('assets/vendor/bootstrap/js/bootstrap.min.js')}}"></script>
+<script src="{{asset('assets/vendor/jquery/jquery.js')}}"></script><script src="{{asset('assets/bundles/libscripts.bundle.js')}}"></script>
 <script src="{{asset('assets/bundles/vendorscripts.bundle.js')}}"></script>
 <script src="{{asset('assets/bundles/c3.bundle.js')}}"></script>
-{{-- <script src="{{asset('assets/js/index.js')}}"></script>
-<script src="{{asset('assets/vendor/bootstrap/js/bootstrap.min.js')}}"></script>
-<script src="{{asset('assets/vendor/jquery/jquery.js')}}"></script>
+<script src="{{asset('assets/js/index.js')}}"></script>
 <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js" integrity="sha256-hlKLmzaRlE8SCJC1Kw8zoUbU8BxA+8kR3gseuKfMjxA=" crossorigin="anonymous"></script>
 <script src="{{asset('assets/vendor/jquery-sparkline/js/jquery.sparkline.min.js')}}"></script>
 <script src="{{asset('assets/vendor/jquery-slimscroll/jquery.slimscroll.min.js')}}"></script>
-<script src="{{asset('assets/vendor/metisMenu/metisMenu.js')}}"></script> --}}
+<script src="{{asset('assets/vendor/metisMenu/metisMenu.js')}}"></script>
+
+<script src="{{asset('assets/vendor/jquery-month/MonthPicker.js')}}"></script>
 
 <script src="{{asset('assets/bundles/mainscripts.bundle.js')}}"></script>
 

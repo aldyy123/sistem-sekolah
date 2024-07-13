@@ -29,6 +29,7 @@ class UserService
         if ($role !== null) {
             $query->where('role', $role);
             if ($role === 'STUDENT') {
+                $with[] = 'student';
                 $with[] = 'student.classroom';
                 $with[] = 'student.batch';
             }
@@ -102,17 +103,23 @@ class UserService
             $user->$key = $value;
         }
 
-        Validator::make($user->toArray(), [
+        $rules = [
             'name' => 'required|string',
             'username' => 'required|string',
             'password' => 'required|string',
             'status' => 'required',
             'email' => 'email',
-            'phone' => 'nullable|string|unique:users,phone',
+            'phone' => 'nullable|string',
             'photo' => 'nullable|string',
             'address' => 'nullable|string',
             'role' => ['required', Rule::in(config('constant.user.roles'))],
-        ])->validate();
+        ];
+
+        if (!empty($user->phone)) {
+            $rules['phone'] .= '|unique:users,phone,' . $user->id;
+        }
+
+        Validator::make($user->toArray(), $rules)->validate();
 
         return $user;
     }

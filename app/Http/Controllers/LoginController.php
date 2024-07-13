@@ -8,37 +8,34 @@ use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
-    public function check(Request $request){
-        if (! Auth::check() && $request->is('login')) {
+    public function check(Request $request)
+    {
+        if (!Auth::check() && $request->is('login')) {
             return view('shared.login');
-        } elseif (! Auth::check()) {
+        } elseif (!Auth::check()) {
             return redirect('login');
         }
 
         return redirect('dashboard');
     }
 
-    public function authenticate(Request $request){
+    public function authenticate(Request $request)
+    {
         $credentials = $request->validate([
             'username' => ['required'],
             'password' => ['required'],
         ]);
-
-        if (Auth::attempt(($credentials + ['status' => true]), $request->get('remember'))){
-            $currentPassword = auth()->user()->password;
-
-            if (HASH::check(Auth::user()->username, $currentPassword)){
-                $pw_matches = true;
-                return redirect('dashboard')->with('pw_matches', $pw_matches);
-            }
-
-            return redirect('dashboard');
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+            return redirect()->intended('dashboard');
         }
 
-        return redirect('login');
+        return redirect('login')->withErrors([
+            'username' => 'Invalid credentials',
+        ]);
     }
 
-    public function logout(){
+    public function logout()
+    {
         Auth::logout();
 
         return redirect('/');

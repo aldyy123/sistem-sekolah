@@ -21,8 +21,7 @@ class CourseController extends Controller
 
         $teacherId = Auth::user()->id;
 
-        $teacherSubject = $subjectTeacherDB->index(['teacher_id' => $teacherId]);
-
+        $teacherSubject = $subjectTeacherDB->index(['teacher_id' => $teacherId])->toArray();
         $subjectIds = collect($teacherSubject['data'])->pluck('subject_id');
 
         $subjects = [];

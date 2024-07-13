@@ -14,14 +14,14 @@ use Illuminate\Support\Facades\Http;
 
 class CourseController extends Controller
 {
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $subjectTeacherDB = new SubjectTeacherService;
         $subjectDB = new SubjectService;
 
         $teacherId = Auth::user()->id;
 
         $teacherSubject = $subjectTeacherDB->index(['teacher_id' => $teacherId])->toArray();
-
         $subjectIds = collect($teacherSubject['data'])->pluck('subject_id');
 
         $subjects = [];
@@ -32,19 +32,21 @@ class CourseController extends Controller
         }
 
         $subject = collect($subjects)
-        ->firstWhere('id', $request->subject_id) ?? null;
+            ->firstWhere('id', $request->subject_id) ?? null;
 
         return view('teacher.subject', compact('subject', 'subjects'))
-        ->with('grades', config('constant.grades'));
+            ->with('grades', config('constant.grades'));
     }
 
-    public function detail(Request $request) {
+    public function detail(Request $request)
+    {
         $coruseDB = new CourseService;
         $subjectDB = new SubjectService;
 
         $course = $coruseDB->detail($request->course_id);
         $subject = $subjectDB->detail($request->subject_id);
-        $courses = $coruseDB->index([
+        $courses = $coruseDB->index(
+            [
                 'subject_id' => $request->subject_id,
                 'by_grade' => 1,
             ]
@@ -53,14 +55,16 @@ class CourseController extends Controller
         return view('teacher.course', compact('courses', 'subject', 'course'));
     }
 
-    public function getCourse(Request $request) {
+    public function getCourse(Request $request)
+    {
         $subjectTeacherDB = new SubjectTeacherService;
         $coruseDB = new CourseService;
         $subjectDB = new SubjectService;
 
 
         if ($request->subject_id !== null) {
-            $courses = $coruseDB->index([
+            $courses = $coruseDB->index(
+                [
                     'subject_id' => $request->subject_id,
                     'by_grade' => 1,
                 ]
@@ -87,26 +91,26 @@ class CourseController extends Controller
 
             return response()->json($subjects);
         }
-
-
     }
 
-    public function createCourse(Request $request) {
+    public function createCourse(Request $request)
+    {
         $coruseDB = new CourseService;
         $userId = Auth::user()->id;
 
 
-        return response()->json($coruseDB->create
-        ($request->subject_id,
-            [
-                'description' => $request->name,
-                'grade' => $request->grade,
-                'created_by' => $userId,
-            ]
-        ));
+        return response()->json($coruseDB->create(
+                $request->subject_id,
+                [
+                    'description' => $request->name,
+                    'grade' => $request->grade,
+                    'created_by' => $userId,
+                ]
+            ));
     }
 
-    public function getCourseTopic(Request $request) {
+    public function getCourseTopic(Request $request)
+    {
         $topicDB = new TopicService;
 
         $topics = $topicDB->index([
@@ -119,7 +123,8 @@ class CourseController extends Controller
         return response()->json($topics);
     }
 
-    public function createCourseTopic(Request $request) {
+    public function createCourseTopic(Request $request)
+    {
         $topicDB = new TopicService;
         $user = Auth::user();
 

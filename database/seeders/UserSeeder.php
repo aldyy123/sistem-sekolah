@@ -29,6 +29,7 @@ class UserSeeder extends Seeder
                 'status' => true,
                 'phone' => '081234567890',
                 'address' => 'Jl. Raya No. 1',
+                'id' => $faker->uuid()
             ],
             [
                 'name' => 'teacheruser',
@@ -38,6 +39,7 @@ class UserSeeder extends Seeder
                 'status' => true,
                 'phone'=> '089765432100',
                 'address' => 'Jl. Raya No. 2',
+                'id' => $faker->uuid()
             ],
             [
                 'name' => 'studentuser',
@@ -46,11 +48,12 @@ class UserSeeder extends Seeder
                 'role' => User::STUDENT,
                 'status' => true,
                 'phone' => '084534567890',
+                'id' => $faker->uuid()
             ],
         ];
 
         foreach ($users as $user) {
-            $createdUser = User::factory($user)->create();
+            $createdUser = User::create($user);
 
             if ($createdUser->role === 'TEACHER') {
                 DB::table('teachers')->insert([

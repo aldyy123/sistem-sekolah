@@ -20,7 +20,7 @@
                 <div id="newSelectInModal"></div>
                 <div class="d-flex flex-wrap mt-2">
                     <a href="#" id="addTeacherInput"
-                        onclick="addInput('newSelectInModal','teacher-field-modal')">+ Tambah Guru</a>
+                        onclick="addInput('newSelectInModal','teacher-field-modal', null)">+ Tambah Guru</a>
                     <a href="#" id="reduceTeacherInput" class="text-danger ml-3"
                         onclick="reduceInput('teacher-field-modal')">- Kurangi Input Guru</a>
                 </div>

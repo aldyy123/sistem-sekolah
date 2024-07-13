@@ -15,11 +15,13 @@
             <div class="col-lg-12">
                 <div class="card">
                     <ul class="nav nav-tabs">
-                        <li class="nav-item"><a class="nav-link active show" data-toggle="tab" href="#batch">Batch</a></li>
-                        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#addBatch">Tambah Periode
+                        <li class="nav-item"><a class="nav-link active show btn-panel" data-toggle="tab"
+                                href="#batch">Batch</a></li>
+                        <li class="nav-item"><a class="nav-link btn-panel" data-toggle="tab" href="#addBatch">Tambah Periode
                                 Angkatan</a></li>
                     </ul>
                     <div class="tab-content mt-0">
+
                         <div class="tab-pane show active" id="batch">
 
                             @if ($errors->any())
@@ -99,32 +101,37 @@
 
                         <div class="tab-pane" id="addBatch">
                             <div class="body mt-2">
-
-                                <form method="POST" action="{{ route('admin.batchs.store') }}">
-                                    @csrf
+                                <div class="alert alert-danger" id="alert-danger" role="alert" style="display: none;">
+                                </div>
+                                <div class="alert alert-success" id="alert-success" role="alert" style="display: none;">
+                                </div>
+                                <form>
                                     <div class="row">
-                                        <div class="col-lg-6">
+                                        {{-- <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label>Year</label>
-                                                <input type="year" value="{{ old('year') }}" class="form-control text-dark" name="year">
+                                                <input type="number" placeholder="YYYY" min="2017" max="2100" class="form-control text-dark" name="year">
                                             </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="form-group">
-                                                <label>Kloter</label>
-                                                <input type="number" value="{{ old('cloter') }}" class="form-control text-dark" name="cloter">
-                                            </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label>Start Periode</label>
-                                                <input type="month" value="{{ old('start_periode') }}" class="form-control text-dark" name="start_periode">
+                                                <input type="month" value="{{ old('start_periode') }}"
+                                                    class="form-control month text-dark" name="start_periode">
                                             </div>
                                         </div>
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label>End Periode</label>
-                                                <input type="month" value="{{ old('end_periode') }}" class="form-control text-dark" name="end_periode">
+                                                <input type="month" value="{{ old('end_periode') }}"
+                                                    class="form-control text-dark" name="end_periode">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label>Kloter</label>
+                                                <input type="number" value="{{ old('cloter') }}"
+                                                    class="form-control text-dark" name="cloter">
                                             </div>
                                         </div>
                                         <div class="col-lg-6">
@@ -157,31 +164,23 @@
 @section('script')
     <script>
         //global variable
+
+        $('.month').MonthPicker();
+
         let allSubjects = {!! json_encode($batchs) !!};
 
-        function openAssignModal(name, subjectId, subjectTeacherId, key) {
-            $('#modal-assign-subject').modal('show');
-            $('#assign-subject-name').val(name);
-            $('#assign-subject-id').val(subjectId);
-            $('#assign-subject-teacher-id').val(subjectTeacherId);
+        $('form').submit(function(event) {
+            event.preventDefault();
 
-            let subjectData = allSubjects[key];
-            $.each(subjectData.teacher_details, (i, item) => {
-                addInput('newSelectInModal', 'teacher-field-modal');
-                $(`#option-${item.id}`).attr("selected", true);
-            })
-        }
+            const formData = new FormData(this);
 
-        $('#submit-assign-button').click((e) => {
-            let subjectId = $('#assign-subject-id').val();
-            let subjectTeacherId = $('#assign-subject-teacher-id').val();
-            let teacherInputs = $("select[name='teachers']");
-            let url = "{!! url('/assign-subject') !!}"
-
-            let teacherIds = [];
-            $.each(teacherInputs, (i, input) => {
-                teacherIds.push(input.value)
-            })
+            const dataStore = {
+                year: formData.get('year') ?? null,
+                cloter: formData.get('cloter') ?? null,
+                status: formData.get('status') ?? null,
+                start_periode: formData.get('start_periode') ?? null,
+                end_periode: formData.get('end_periode') ?? null,
+            }
 
             $.ajaxSetup({
                 headers: {
@@ -191,21 +190,33 @@
 
             $.ajax({
                 type: "post",
-                url: url,
-                data: {
-                    subjectId,
-                    subjectTeacherId,
-                    teacherIds
-                },
-                beforeSend: function() {
-                    $('#submit-assign-button').attr('disabled', true)
-                },
+                url: "{!! route('admin.batchs.store') !!}",
+                data: dataStore,
                 success: function(response) {
-                    window.location.reload();
+                    $('#alert-success').html(response.message);
+                    $('#alert-success').show('fast');
+                    $('#alert-danger').hide('fast');
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                },
+                error: function(e) {
+                    const errorsField = e.responseJSON.errors
+                    const ul = document.createElement('ul');
+                    for (let errors in errorsField) {
+                        errorsField[errors].forEach(error => {
+                            const li = document.createElement('li');
+                            li.innerHTML = error;
+                            ul.appendChild(li);
+                        });
+                    }
+                    $('#alert-danger').html(ul.innerHTML);
+                    $('#alert-danger').show('fast');
+                    $('#alert-success').hide('fast');
                 }
             });
+        });
 
-        })
 
         function openEditModal(batch) {
             $('#modal-edit-batch').modal('show');

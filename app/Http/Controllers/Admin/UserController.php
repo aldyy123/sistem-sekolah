@@ -22,6 +22,7 @@ class UserController extends Controller
     public function dashboard() {
         $userService = new UserService;
         $experienceDB = new ExperienceService;
+        $studentService = new StudentService;
 
         $userId = Auth::user()->id;
 
@@ -48,8 +49,10 @@ class UserController extends Controller
             $experience = Auth::user()->experience;
 
             if ($experience === null) {
-                $experienceDB->create($userId, ['grade' => Auth::user()->grade ?? null, 'experience_point' => 0, 'level' => 0]);
-                $experience = Auth::user()->experience;
+                $student = $studentService->getStudentById($userId);
+                $experienceDB->create($userId, ['grade' => $student->classroom->grade, 'experience_point' => 0, 'level' => 0]);
+
+                $experience = Auth::user()->experience ?? 0;
             }
 
             $experience->current_xp = $experience->experience_point % Experience::REQUIRED_XP;
@@ -115,11 +118,10 @@ class UserController extends Controller
         }
 
         if($user->role === "TEACHER"){
-            $userTeacher = $teacher->findTeacher($user->id);
             $list = $subjectTeacher->index([
-                'teacher_id' => $userTeacher->id,
-            ]);
-            $subjects_ids = $subjectTeacher->filterFieldData($list['data'], 'subject_id');
+                'teacher_id' => $user->id,
+            ])->toArray();
+            $subjects_ids = $subjectTeacher->filterFieldData($list['data'] ?? [], 'subject_id');
             $list = $schedules->index([
                 'subject_id' => $subjects_ids,
             ]);

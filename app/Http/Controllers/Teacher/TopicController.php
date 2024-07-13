@@ -22,7 +22,6 @@ class TopicController extends Controller
             $contentDB = new ContentService;
 
             $contentDB->detail($request->content_id);
-
             return view('teacher.topic.content')
                 ->with('subject_id', $request->subject_id)
                 ->with('course_id', $request->course_id)

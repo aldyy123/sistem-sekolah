@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Service\Database\SubjectService;
 use App\Service\Database\SubjectTeacherService;
+use App\Service\Database\TeacherService;
 use App\Service\Database\UserService;
 use Illuminate\Http\Request;
 
@@ -13,6 +14,7 @@ class SubjectController extends Controller
     public function index() {
         $subjectService = new SubjectService;
         $userService = new UserService;
+        $teacherService = new TeacherService;
 
         $filter = [
             'order_by' => 'ASC',
@@ -27,7 +29,12 @@ class SubjectController extends Controller
                 continue;
             }
 
-            $teachers = $userService->bulkDetail($subject['subject_teacher']['teachers'])['data'];
+            $teachers = [];
+
+            foreach ($subject['subject_teacher']['teachers'] as $teacher) {
+                $teachers[] = $userService->detail($teacher);
+            }
+
             $subject['teacher_details'] = $teachers;
             $subject['teacher_details_string'] = collect($teachers)->pluck('name')->join(', ');
             $subjectsWithTeacher[] = $subject;
@@ -40,7 +47,6 @@ class SubjectController extends Controller
         ];
 
         $teachers = $userService->index($filter)['data'];
-
 
         return view('admin.subjects')
             ->with('subjects', $subjectsWithTeacher)

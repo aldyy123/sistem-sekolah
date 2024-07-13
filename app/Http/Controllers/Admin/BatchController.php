@@ -32,7 +32,6 @@ class BatchController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'year' => 'required',
             'start_periode' => 'required|before:end_periode',
             'end_periode' => 'required|after:start_periode',
             'status' => 'required',
@@ -40,9 +39,10 @@ class BatchController extends Controller
         ]);
 
         $payload = $request->all();
+        $payload['year'] = date('Y', strtotime($payload['start_periode']));
         $this->batchsService->create($payload);
 
-        return redirect()->route('admin.batchs')->with('success', 'Batch created successfully');
+        return response()->json(['message' => 'Batch created successfully']);
     }
 
     public function update(Request $request)

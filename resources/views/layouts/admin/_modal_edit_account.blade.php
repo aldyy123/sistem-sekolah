@@ -30,6 +30,7 @@
                 <div class="alert alert-success" id="update-alert" role="alert" style="display: none;">
                     Akun berhasil diedit!.
                 </div>
+                <div class="alert alert-danger" id="edit-alert-danger" role="alert" style="display: none;"></div>
                 <div onclick="$(`#update-alert`).hide('fast');">
                     <div class="form-group">
                         <label for="name" class="col-form-label">Nama</label>
@@ -97,6 +98,10 @@
                             </select>
                         </div>
                     @endif
+                    <div class="form-group">
+                        <label for="editPhone" class="col-form-label">Phone</label>
+                        <input type="number" class="form-control text-dark" name="editPhone" id="editPhone">
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">

@@ -165,7 +165,6 @@
     <script>
         //global variable
 
-        $('.month').MonthPicker();
 
         let allSubjects = {!! json_encode($batchs) !!};
 

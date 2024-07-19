@@ -45,8 +45,8 @@
                         @endforeach
 
                         <div class="tab-pane" id="addJadwal">
-                            <div id="error-header" role="alert"></div>
-                            <div id="success-header" role="alert"></div>
+                            <div id="error-header" class="alert" role="alert"></div>
+                            <div id="success-header" class="alert" role="alert"></div>
                             <div class="body mt-2">
                                 <form id="form-schedule">
                                     @csrf
@@ -74,8 +74,7 @@
                                                     name="mapel">
                                                     <option disabled>Select Mapel</option>
                                                     @foreach ($mapel['data'] as $subject)
-                                                        <option value="{{ $subject['id'] }}">{{ $subject['name'] }}
-                                                        </option>
+                                                        <option value="{{ $subject['id'] }}">{{ $subject['name'] }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>

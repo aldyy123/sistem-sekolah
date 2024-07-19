@@ -12,4 +12,16 @@ class Content extends Model
 
     const PUBLISHED = 'PUBLISHED';
     const DRAFT = 'DRAFT';
+
+    public function topic()
+    {
+        return $this->belongsTo(Topic::class, 'topic_id');
+    }
+
+    public function contentResults()
+    {
+        return $this->hasMany(ContentResult::class, 'content_id');
+    }
+
+
 }

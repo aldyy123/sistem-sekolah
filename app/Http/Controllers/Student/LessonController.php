@@ -11,7 +11,9 @@ use App\Service\Database\ContentService;
 use App\Service\Database\CourseService;
 use App\Service\Database\ExperienceService;
 use App\Service\Database\QuestionService;
+use App\Service\Database\SchedulesService;
 use App\Service\Database\ScoreService;
+use App\Service\Database\StudentService;
 use App\Service\Database\SubjectService;
 use App\Service\Database\TopicService;
 use Illuminate\Http\Request;
@@ -19,44 +21,76 @@ use Illuminate\Support\Facades\Auth;
 
 class LessonController extends Controller
 {
-    public function getSubject() {
+    public function getSubject()
+    {
+        $studentServices = new StudentService;
+        $schedulesService = new SchedulesService;
         $subjectDB = new SubjectService;
-        $schoolId = Auth::user()->school_id;
 
-        $subjects = $subjectDB->index([
+        $studentUser = $studentServices->getStudentById(Auth::user()->id);
+        $schedules = $schedulesService->index([
+            'classroom_id' => $studentUser->classroom_id,
+            'day' => date('l'),
+        ]);
+
+        $subjectsIds = [];
+        foreach ($schedules as $schedule) {
+            $subjectsIds[] = $schedule['subject_id'];
+        }
+
+        $subjects = $subjectDB->index(
+            [
                 'per_page' => 99,
+                'subject_id' => $subjectsIds,
             ],
         );
 
         return response()->json($subjects['data']);
     }
 
-    public function course(Request $request) {
+    public function course(Request $request)
+    {
+        $studentServices = new StudentService;
+        $schedulesService = new SchedulesService;
         $subjectDB = new SubjectService;
 
-        $experience = Auth::user()->experience;
+        $studentUser = $studentServices->getStudentById(Auth::user()->id);
+        $schedules = $schedulesService->index([
+            'classroom_id' => $studentUser->classroom_id,
+            'day' => date('l'),
+        ]);
 
-        $experience->current_xp = $experience->experience_point % Experience::REQUIRED_XP;
+        $subjectsIds = [];
+        foreach ($schedules as $schedule) {
+            $subjectsIds[] = $schedule['subject_id'];
+        }
 
-        $subjects = $subjectDB->index([
+        $subjects = $subjectDB->index(
+            [
                 'per_page' => 99,
+                'subject_id' => $subjectsIds,
             ],
         );
 
         $subject = $subjectDB->detail($request->subject_id);
 
+        $experience = Auth::user()->experience;
+        $experience->current_xp = $experience->experience_point % Experience::REQUIRED_XP;
+
         return view('student.course')
-        ->with('subject', $subject)
-        ->with('experience', $experience)
-        ->with('subjects', $subjects['data']);
+            ->with('subject', $subject)
+            ->with('experience', $experience)
+            ->with('subjects', $subjects['data']);
     }
 
-    public function getCourse(Request $request) {
+    public function getCourse(Request $request)
+    {
         $courseDB = new CourseService;
 
         $grade = Auth::user()->grade;
 
-        $courses = $courseDB->index([
+        $courses = $courseDB->index(
+            [
                 'subject_id' => $request->subject_id,
                 'grade' => $grade,
                 'per_page' => 99,
@@ -68,7 +102,8 @@ class LessonController extends Controller
         return response()->json($courses);
     }
 
-    public function topic(Request $request) {
+    public function topic(Request $request)
+    {
         $subjectDB = new SubjectService;
         $courseDB = new CourseService;
 
@@ -81,7 +116,8 @@ class LessonController extends Controller
         $subject = $subjectDB->detail($request->subject_id);
         $course = $courseDB->detail($request->course_id);
 
-        $courses = $courseDB->index([
+        $courses = $courseDB->index(
+            [
                 'subject_id' => $request->subject_id,
                 'grade' => $grade,
                 'per_page' => 99,
@@ -89,17 +125,19 @@ class LessonController extends Controller
         );
 
         return view('student.topic.index')
-        ->with('courses', $courses['data'])
-        ->with('subject', $subject)
-        ->with('experience', $experience)
-        ->with('course', $course);
+            ->with('courses', $courses['data'])
+            ->with('subject', $subject)
+            ->with('experience', $experience)
+            ->with('course', $course);
     }
 
-    public function getTopic(Request $request) {
+    public function getTopic(Request $request)
+    {
         $topicDB = new TopicService;
 
 
-        $topics = $topicDB->index([
+        $topics = $topicDB->index(
+            [
                 'subject_id' => $request->subject_id,
                 'course_id' => $request->course_id,
                 'per_page' => 99,
@@ -111,7 +149,8 @@ class LessonController extends Controller
         return response()->json($topics);
     }
 
-    public function detailTopic(Request $request) {
+    public function detailTopic(Request $request)
+    {
         $subjectDB = new SubjectService;
         $courseDB = new CourseService;
         $topicDB = new TopicService;
@@ -125,7 +164,8 @@ class LessonController extends Controller
         $course = $courseDB->detail($request->course_id);
         $topic = $topicDB->detail($request->topic_id);
 
-        $topics = $topicDB->index([
+        $topics = $topicDB->index(
+            [
                 'subject_id' => $request->subject_id,
                 'course_id' => $request->course_id,
                 'per_page' => 99,
@@ -133,14 +173,15 @@ class LessonController extends Controller
         );
 
         return view('student.topic.detail')
-        ->with('subject', $subject)
-        ->with('course', $course)
-        ->with('topic', $topic)
-        ->with('experience', $experience)
-        ->with('topics', $topics['data']);
+            ->with('subject', $subject)
+            ->with('course', $course)
+            ->with('topic', $topic)
+            ->with('experience', $experience)
+            ->with('topics', $topics['data']);
     }
 
-    public function getContent(Request $request) {
+    public function getContent(Request $request)
+    {
         $contentDB = new ContentService;
 
         $contents = $contentDB->index([
@@ -153,10 +194,11 @@ class LessonController extends Controller
         if (isset($contents['total'])) {
             $contentResultDB = new ContentResultService;
 
-            $contentResult =[];
+            $contentResult = [];
             foreach ($contents['data'] as $key => $content) {
                 $contentResult[$key] = $content;
-                $contentResult[$key]['content_result'] = $contentResultDB->index([
+                $contentResult[$key]['content_result'] = $contentResultDB->index(
+                    [
                         'content_id' => $content['id'],
                         'student_id' => Auth::user()->id,
                     ],
@@ -169,13 +211,15 @@ class LessonController extends Controller
         return response()->json($contents);
     }
 
-    public function getActivity(Request $request) {
+    public function getActivity(Request $request)
+    {
         $activityDB = new ActivityService;
         $activityResultDB = new ActivityResultService;
         $schoolId = Auth::user()->school_id;
         $userId = Auth::user()->id;
 
-        $activities = $activityDB->index([
+        $activities = $activityDB->index(
+            [
                 'topic_id' => $request->topic_id,
                 'status' => 'PUBLISHED',
             ],
@@ -189,7 +233,8 @@ class LessonController extends Controller
             $dataExam = is_object($dataActivity['EXAM']) ? $dataActivity['EXAM']->toArray() : [];
             foreach ($dataExam as $key => $activity) {
                 $activityExam[$key] = $activity;
-                $activityExam[$key]['activity_result'] = $activityResultDB->index([
+                $activityExam[$key]['activity_result'] = $activityResultDB->index(
+                    [
                         'activity_id' => $activity['id'],
                         'student_id' => $userId,
                     ],
@@ -202,10 +247,11 @@ class LessonController extends Controller
         return response()->json($dataActivity);
     }
 
-    public function detailContent(Request $request) {
+    public function detailContent(Request $request)
+    {
         $contentDB = new ContentService;
         $contentResultService = new ContentResultService;
-        $schoolId = Auth::user()->school_id;
+
         $userId = Auth::user()->id;
         $experience = Auth::user()->experience;
 
@@ -221,7 +267,7 @@ class LessonController extends Controller
 
         $result = $contentResultService->index($filter)['data'];
 
-        if($result !== []){
+        if ($result !== []) {
             $finished = true;
         }
 
@@ -236,7 +282,8 @@ class LessonController extends Controller
             ->with('content_id', $request->content_id);
     }
 
-    public function finishContent(Request $request) {
+    public function finishContent(Request $request)
+    {
         $userId = Auth::user()->id;
         $experienceId = Auth::user()->experience->id;
         $contentResultService = new ContentResultService;
@@ -255,7 +302,8 @@ class LessonController extends Controller
         return response()->json($create);
     }
 
-    public function activityStart(Request $request) {
+    public function activityStart(Request $request)
+    {
         $activityDB = new ActivityService;
         $topicDB = new TopicService;
         $user = Auth::user();
@@ -266,19 +314,21 @@ class LessonController extends Controller
         $topic = $topicDB->detail($request->topic_id);
 
         return view('student.activity.exercise')
-        ->with('subjectId', $request->subject_id)
-        ->with('courseId', $request->course_id)
-        ->with('user', $user)
-        ->with('topic', $topic)
-        ->with('experience', $experience)
-        ->with('activity', $activity);
+            ->with('subjectId', $request->subject_id)
+            ->with('courseId', $request->course_id)
+            ->with('user', $user)
+            ->with('topic', $topic)
+            ->with('experience', $experience)
+            ->with('activity', $activity);
     }
 
-    public function getQuestion(Request $request) {
+    public function getQuestion(Request $request)
+    {
         $questionDB = new QuestionService;
         $user = Auth::user();
 
-        $questions = $questionDB->index([
+        $questions = $questionDB->index(
+            [
                 'activity_id' => $request->activity_id,
                 'student_id' => $request->student_id,
                 'order_by' => 'asc',
@@ -291,7 +341,8 @@ class LessonController extends Controller
         return response()->json($questions);
     }
 
-    public function finishActivity(Request $request) {
+    public function finishActivity(Request $request)
+    {
         $activityDB = new ActivityService;
         $activityResultDB = new ActivityResultService;
         $experienceService = new ExperienceService;
@@ -310,39 +361,30 @@ class LessonController extends Controller
             ],
         ];
 
-        $activityResult = $activityResultDB->index([
+        $activityResult = $activityResultDB->index(
+            [
                 'activity_id' => $activityId,
                 'student_id' => $user->id,
             ],
         )['data'][0] ?? null;
-        // Untuk Update XP
+
         $exp = 0;
 
-        if ($activity['type'] === 'EXAM') {
-
-            if ($activityResult === null) {
-                $finish = $activityResultDB->create($activityId, $user->id, $payload);
-                $exp += $scoreService->divideExperience($score, $activity['experience']);
-                $finish['experience'] = $exp;
-            } else {
+        if ($activityResult === null) {
+            $finish = $activityResultDB->create($activityId, $user->id, $payload);
+            $exp += $scoreService->divideExperience($score, $activity['experience']);
+        } else {
+            if ($activity['type'] === 'EXAM') {
                 $finish = $activityResultDB->detail($activityResult['id']);
                 $finish['score'] = $score;
                 $exp += 0;
-                $finish['experience'] = $exp;
-            }
-
-        } else {
-            if ($activityResult === null) {
-                $finish = $activityResultDB->create($activityId, $user->id, $payload);
-                $exp += $scoreService->divideExperience($score, $activity['experience']);
-                $finish['experience'] = $exp;
             } else {
                 $finish = $activityResultDB->update($activityId, $user->id, $activityResult['id'], $payload);
-                // dikurang jadi 10%, karna ini dia udah ngerjain, tapi mau ngerjain lagi, biar ga farming, ato mau di 0 juga gapapa
                 $exp += round($scoreService->divideExperience($score, $activity['experience']) * 0.1, 0);
-                $finish['experience'] = $exp;
             }
         }
+
+        $finish['experience'] = $exp;
 
         $payload = [
             'experience' => $exp,

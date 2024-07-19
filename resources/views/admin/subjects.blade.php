@@ -106,7 +106,6 @@
 
             // Add select elements for existing teachers
             let subjectData = allSubjects[key];
-            console.log(subjectData.teacher_details);
             $.each(subjectData.teacher_details, (i, item) => {
                 addInput('newSelectInModal', 'teacher-field-modal', item);
                 $(`#option-${item.id}`).attr("selected", true);

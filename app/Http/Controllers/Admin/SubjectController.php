@@ -11,10 +11,11 @@ use Illuminate\Http\Request;
 
 class SubjectController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         $subjectService = new SubjectService;
         $userService = new UserService;
-        $teacherService = new TeacherService;
+        $subjectTeacherService = new SubjectTeacherService;
 
         $filter = [
             'order_by' => 'ASC',
@@ -25,21 +26,28 @@ class SubjectController extends Controller
 
         $subjectsWithTeacher = [];
         foreach ($subjects['data'] as $subject) {
-            if(!$subject['subject_teacher']) {
-                continue;
-            }
-
             $teachers = [];
 
-            foreach ($subject['subject_teacher']['teachers'] as $teacher) {
-                $teachers[] = $userService->detail($teacher);
-            }
+            if (!$subject['subject_teacher']) {
+                $subjectTeacher = $subjectTeacherService->create([
+                    'subject_id' => $subject['id'],
+                    'teachers' => [],
+                ]);
+                $subject['subject_teacher'] = $subjectTeacher;
 
+                $teachers = collect($subjectTeacher['teachers'])->map(function ($teacherId) use ($userService) {
+                    return $userService->detail($teacherId);
+                })->toArray();
+
+            } else {
+                $teachers = collect($subject['subject_teacher']['teachers'])->map(function ($teacherId) use ($userService) {
+                    return $userService->detail($teacherId);
+                })->toArray();
+            }
             $subject['teacher_details'] = $teachers;
             $subject['teacher_details_string'] = collect($teachers)->pluck('name')->join(', ');
             $subjectsWithTeacher[] = $subject;
         }
-
 
         $filter = [
             'per_page' => 99,
@@ -53,7 +61,8 @@ class SubjectController extends Controller
             ->with('teachers', $teachers);
     }
 
-    public function create(Request $request) {
+    public function create(Request $request)
+    {
         $subjectService = new SubjectService;
         $subjectTeacherService = new SubjectTeacherService;
 
@@ -73,7 +82,8 @@ class SubjectController extends Controller
         return redirect()->back();
     }
 
-    public function update(Request $request) {
+    public function update(Request $request)
+    {
         $subjectService = new SubjectService;
 
         $payload = [
@@ -85,7 +95,8 @@ class SubjectController extends Controller
         return redirect()->back();
     }
 
-    public function assign(Request $request) {
+    public function assign(Request $request)
+    {
         $subjectTeacherService = new SubjectTeacherService;
 
         $teachers = collect($request->teacherIds)->unique();

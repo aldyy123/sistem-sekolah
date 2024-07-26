@@ -163,7 +163,7 @@
         button = $("#btn-create-content");
 
         if (name === '') {
-            swal('Nama ulasan harus diisi !')
+            swal('Nama materi harus diisi !')
         } else {
             $.ajax({
                 type: "post",
@@ -180,11 +180,11 @@
                     $("#modal-add-content").modal('hide')
                     resetValue()
                     getContents()
-                    swal('Berhasil menambahkan ulasan!')
+                    swal('Berhasil menambahkan materi!')
                 },
                 error: function (e) {
                     button.html('Tambah')
-                    swal('Gagal menambah ulasan. Silahkan coba lagi!')
+                    swal('Gagal menambah materi. Silahkan coba lagi!')
                 }
             });
         }

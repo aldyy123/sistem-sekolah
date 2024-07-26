@@ -37,7 +37,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('teacherlearnify123'),
                 'role' => User::TEACHER,
                 'status' => true,
-                'phone'=> '089765432100',
+                'phone' => '089765432100',
                 'address' => 'Jl. Raya No. 2',
                 'id' => $faker->uuid()
             ],
@@ -50,6 +50,72 @@ class UserSeeder extends Seeder
                 'phone' => '084534567890',
                 'id' => $faker->uuid()
             ],
+            [
+                "username" => "anita.rahmawati",
+                "name" => "Anita Rahmawati",
+                "role" => User::TEACHER,
+                "email" => "anita.rahmawati@gmail.com",
+                "phone" => "081234567891",
+                "address" => "Jl. Merdeka No. 15, Surabaya, Jawa Timur",
+                "password" => Hash::make('anitarahmawati123'),
+                "status" => true,
+                "id" => $faker->uuid()
+            ],
+            [
+                "username" => "budi.santoso",
+                "name" => "Budi Santoso",
+                "role" => User::TEACHER,
+                "email" => "budi.santoso@gmail.com",
+                "phone" => "081398765433",
+                "address" => "Jl. Sudirman No. 25, Jakarta Selatan, DKI Jakarta",
+                "password" => Hash::make('budisantoso123'),
+                "status" => true,
+                "id" => $faker->uuid()
+            ],
+            [
+                "username" => "chandra.wijaya",
+                "name" => "Chandra Wijaya",
+                "role" => User::TEACHER,
+                "email" => "chandra.wijaya@gmail.com",
+                "phone" => "081456781235",
+                "address" => "Jl. Gajah Mada No. 40, Bandung, Jawa Barat",
+                "password" => Hash::make('chandrawijaya123'),
+                "status" => true,
+                "id" => $faker->uuid()
+            ],
+            [
+                "username" => "ahmad.fauzi",
+                "name" => "Ahmad Fauzi",
+                "role" => User::STUDENT,
+                "email" => "ahmad.fauzi@gmail.com",
+                "phone" => "082112345679",
+                "address" => "Jl. Pahlawan No. 15, Slawi, Kabupaten Tegal",
+                "password" => Hash::make('ahmadFauzi123'),
+                "status" => true,
+                "id" => $faker->uuid()
+            ],
+            [
+                "username" => "intan.wulandari",
+                "name" => "Intan Wulandari",
+                "role" => User::STUDENT,
+                "email" => "intan.wulandari@gmail.com",
+                "phone" => "082223456780",
+                "address" => "Jl. Diponegoro No. 30, Adiwerna, Kabupaten Tegal",
+                "password" => Hash::make('intanWulandari123'),
+                "status" => true,
+                "id" => $faker->uuid()
+            ],
+            [
+                "username" => "budi.setiawan",
+                "name" => "Budi Setiawan",
+                "role" => User::STUDENT,
+                "email" => "budi.setiawan@gmail.com",
+                "phone" => "082334567891",
+                "address" => "Jl. Ahmad Yani No. 40, Dukuhturi, Kabupaten Tegal",
+                "password" => Hash::make('budiSetiawan123'),
+                "status" => true,
+                "id" => $faker->uuid()
+            ]
         ];
 
         foreach ($users as $user) {
@@ -69,7 +135,7 @@ class UserSeeder extends Seeder
                     'id' => Uuid::uuid4()->toString(),
                     'user_id' => $createdUser->id,
                     'classroom_id' => Classroom::pluck('id')->random(),
-                    'last_education' => 'SMPN 1 Bandung',
+                    'last_education' => $faker->randomElement(['SMP Negeri 1 Slawi', 'SMP Negeri 2 Slawi', 'SMP Negeri 3 Slawi']),
                     'degree' => $faker->randomElement(['SMP', 'MTS', 'SMA', 'MA']),
                     'batch_id' => Batchs::pluck('id')->random(),
                 ]);

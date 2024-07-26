@@ -22,9 +22,7 @@ class SubjectTeacherFactory extends Factory
             'id' => $this->faker->uuid(),
             'subject_id' => Subject::factory()->create()->id,
             'teachers' => [
-                User::factory()->create()->id,
-                User::factory()->create()->id,
-                User::factory()->create()->id,
+                User::pluck('id')->random(),
             ]
         ];
     }

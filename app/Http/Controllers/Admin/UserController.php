@@ -122,6 +122,7 @@ class UserController extends Controller
                 'teacher_id' => $user->id,
             ])->toArray();
             $subjects_ids = $subjectTeacher->filterFieldData($list['data'] ?? [], 'subject_id');
+
             $list = $schedules->index([
                 'subject_id' => $subjects_ids,
             ]);

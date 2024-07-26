@@ -34,59 +34,62 @@ class DatabaseSeeder extends Seeder
 
         $subjects = [
             [
-                'name' => 'Bahasa Indonesia',
+                'id' => Uuid::uuid4()->toString(),
+                'name' => 'Bahasa Inggris',
             ],
             [
+                'id' => Uuid::uuid4()->toString(),
                 'name' => 'Matematika',
-            ],
-            [
-                'name' => 'Bahasa Sunda',
             ],
         ];
 
         $subjectIds = [];
         foreach ($subjects as $subject) {
-            $createdSubject = Subject::factory($subject)->create();
+            $createdSubject = Subject::create($subject);
             $subjectIds[] = $createdSubject->id;
 
-            SubjectTeacher::factory(['subject_id' => $createdSubject->id, 'teachers' => [$selectedTeacherId]])->create();
+            SubjectTeacher::create(['subject_id' => $createdSubject->id, 'teachers' => [$selectedTeacherId], 'id' => Uuid::uuid4()->toString()]);
         }
 
-        $courseDescription = collect([
-            'IT',
-            'Bisnis',
-            'Umum',
+        $babDescripton = collect([
+            [
+                'id' => Uuid::uuid4()->toString(),
+                'description' => 'Pengenalan Bahasa Inggris',
+                'grade' => rand(1, 12),
+            ],
+            [
+                'id' => Uuid::uuid4()->toString(),
+                'description' => 'Pengenalan Matematika',
+                'grade' => rand(1, 12),
+            ],
         ]);
 
         $courseIds = [];
-        foreach ($subjectIds as $subjectId) {
-            $course = [
-                'description' => $courseDescription->random(),
-                'grade' => 12,
-                'created_by' => $selectedTeacherId,
-                'subject_id' => $subjectId,
-            ];
 
-            $courseIds[] = Course::factory($course)->create()->id;
-        }
-
-        foreach ($subjectIds as $subjectId) {
-            $course = [
-                'description' => $courseDescription->random(),
-                'grade' => 11,
-                'created_by' => $selectedTeacherId,
-                'subject_id' => $subjectId,
-            ];
-
-            $courseIds[] = Course::factory($course)->create()->id;
-        }
-
-        foreach ($subjectIds as $subjectId) {
-            foreach ($courseIds as $courseId) {
-                for ($i = 0; $i < 3; $i++) {
-                    Topic::factory(['course_id' => $courseId, 'subject_id' => $subjectId])->create();
-                }
+        foreach ($subjectIds as $index => $subjectId) {
+            if ($index === 0) {
+                $course['description'] = 'Pengenalan Bahasa Inggris';
+            } else {
+                $course['description'] = 'Pengenalan Matematika';
             }
+
+            $course['created_by'] = $selectedTeacherId;
+            $course['subject_id'] = $subjectIds[$index];
+            $course['id'] = Uuid::uuid4()->toString();
+            $course['grade'] = rand(1, 12);
+            $courseIds[] = Course::create($course)->id;
+        }
+
+
+        $order = 0;
+        foreach ($subjectIds as $index => $subjectId) {
+            $topic['course_id'] = $courseIds[$index];
+            $topic['subject_id'] = $subjectId;
+            $topic['name'] = "Pembahasan Bab {$order} {$subjects[$index]['name']}";
+            $topic['order'] = $order;
+            $topic['id'] = Uuid::uuid4()->toString();
+            Topic::create($topic);
+            $order++;
         }
 
         $this->call(SchedulesSeeder::class);

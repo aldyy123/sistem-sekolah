@@ -116,7 +116,7 @@
         button = $("#btn-create")
 
         if (name === '') {
-            swal('Nama materi harus diisi !')
+            swal('Nama pembahasan harus diisi !')
         } else {
             $.ajax({
                 type: "post",
@@ -134,11 +134,11 @@
                     $("#modal-add-topic").modal('hide')
                     resetValue()
                     getCourseTopic()
-                    swal('Berhasil menyimpan materi !')
+                    swal('Berhasil menyimpan pembahasan !')
                 },
                 error: function (e) {
                     button.html('Tambah')
-                    swal('Gagal menyimpan materi. Silahkan coba lagi !')
+                    swal('Gagal menyimpan pembahasan. Silahkan coba lagi !')
                 }
             });
         }

@@ -19,7 +19,11 @@ class SchedulesService
         $query = Schedule::orderBy('days', $orderBy);
 
         if ($classroom_id !== null) {
-            $query->where('classroom_id', $classroom_id);
+            if (is_array($classroom_id)) {
+                $query->whereIn('classroom_id', $classroom_id);
+            } else {
+                $query->where('classroom_id', $classroom_id);
+            }
         }
 
         if ($days !== null) {
@@ -28,6 +32,13 @@ class SchedulesService
 
         if ($subject_id !== null) {
             $query->whereIn('subject_id', $subject_id);
+        }
+        if ($classroom_id !== null) {
+            if (is_array($classroom_id)) {
+                $query->whereIn('classroom_id', $classroom_id);
+            } else {
+                $query->where('classroom_id', $classroom_id);
+            }
         }
 
         $contents = $query->with(['classroom', 'subject'])->get();

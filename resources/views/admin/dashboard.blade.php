@@ -81,12 +81,12 @@
                         <small>Laporan kenaikan jumlah akun siswa dan guru perbulan</small>
                         <div class="d-flex justify-content-start mt-3">
                             <div class="mr-5">
-                            <label class="mb-0">Siswa</label>
-                            <h4 class="total-student">0</h4>
+                                <label class="mb-0">Siswa</label>
+                                <h4 class="total-student">0</h4>
                             </div>
                             <div>
-                            <label class="mb-0">Guru</label>
-                            <h4 class="total-teacher">0</h4>
+                                <label class="mb-0">Guru</label>
+                                <h4 class="total-teacher">0</h4>
                             </div>
                         </div>
                         <div id="chart-donut-stats" style="height: 250px"></div>
@@ -195,7 +195,7 @@
             lines: {
             fillColor: { colors: [{ opacity: 0 }, { opacity: 0.2 }]}
             }
-        }], 
+        }],
         {
             series: {
                 shadowSize: 0,
@@ -214,7 +214,7 @@
                         min: 0,
                         max: 100,
                 ticks: [[0,''],[20,'25'],[50,'50'],[75,'75'],[100,'100']],
-            
+
             },
             xaxis: {
                 show: true,

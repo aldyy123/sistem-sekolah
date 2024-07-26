@@ -270,13 +270,13 @@
             if ((title === '' || (estimation === '0' || estimation === '') || content === '') && status === 'PUBLISHED') {
                 swal({
                     title: "Judul, Estimasi, dan Konten tidak boleh kosong",
-                    text: "Isi judul, estimasi, dan konten terlebih dahulu untuk menerbitkan ulasan",
+                    text: "Isi judul, estimasi, dan konten terlebih dahulu untuk menerbitkan materi",
                     closeOnConfirm: false,
                 });
             } else if (status === 'PUBLISHED') {
                 swal({
                     title: "Sudah simpan ulasan?",
-                    text: "Harap menyimpan ulasan terlebih dahulu sebelum diterbitkan",
+                    text: "Harap menyimpan materi terlebih dahulu sebelum diterbitkan",
                     confirmButtonText: "Sudah",
                     confirmButtonColor: "#007bff",
                     showCancelButton: true,
@@ -288,7 +288,7 @@
             } else {
                 swal({
                     title: "Ingin mengubah ulasan?",
-                    text: "Ulasan tidak dapat diakses oleh murid jika dalam keadaan edit (draft)",
+                    text: "Materi tidak dapat diakses oleh murid jika dalam keadaan edit (draft)",
                     confirmButtonText: "Ubah",
                     confirmButtonColor: "#007bff",
                     showCancelButton: true,

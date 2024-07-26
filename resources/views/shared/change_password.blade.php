@@ -34,7 +34,7 @@
                     @include('shared.svg.pw')
                 </div>
                 <form class="form-auth-small my-auto" action="{{route('update-password')}}" method="post">
-                    <img src="{{asset('assets/images/logo-with-name-learnifyid.svg')}}" alt="Smart School Logo" class="img-fluid">
+                    <img src="{{asset('assets/images/logo-bimble-class.png')}}" alt="Smart School Logo" class="img-fluid">
                     @csrf
                     @method("PATCH")
                     <p class="text-center" style="font-size: 12px;">Silahkan ganti password anda.</p>

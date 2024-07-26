@@ -16,23 +16,24 @@ class UserFactory extends Factory
      */
     public function definition()
     {
-        $name = $this->faker->firstName();
-        $username = $name.$this->faker->numerify('###');
+        // $name = $this->faker->firstName();
+        // $username = $name.$this->faker->numerify('###');
 
-        $roles = [
-            User::ADMIN,
-            User::STUDENT,
-            User::TEACHER,
-        ];
+        // $roles = [
+        //     User::ADMIN,
+        //     User::STUDENT,
+        //     User::TEACHER,
+        // ];
 
-        return [
-            'id' => $this->faker->uuid(),
-            'name' => $name,
-            'username' => $username,
-            'password' => Hash::make($username),
-            'role' => $this->faker->randomElement($roles),
-            'status' => true,
-            'email' => $this->faker->email(),
-        ];
+        // return [
+        //     'id' => $this->faker->uuid(),
+        //     'name' => $name,
+        //     'username' => $username,
+        //     'password' => Hash::make($username),
+        //     'role' => $this->faker->randomElement($roles),
+        //     'status' => true,
+        //     'email' => $this->faker->email(),
+        // ];
+        return [];
     }
 }

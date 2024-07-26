@@ -14,11 +14,28 @@ class SubjectService{
         $orderBy = $filter['order_by'] ?? 'DESC';
         $per_page = $filter['per_page'] ?? 20;
         $name = $filter['name'] ?? null;
+        $classroom_id = $filter['classroom_id'] ?? null;
+        $subject_id = $filter['subject_id'] ?? null;
         $relation = $filter['with_subject_teacher'] ?? false;
 
 
         $query = Subject::orderBy('created_at', $orderBy);
 
+        if (!is_null($subject_id)) {
+            if (is_array($subject_id)) {
+                $query->whereIn('id', $subject_id);
+            } else {
+                $query->where('id', $subject_id);
+            }
+        }
+
+        if ($classroom_id !== null) {
+            if (is_array($classroom_id)) {
+                $query->whereIn('classroom_id', $classroom_id);
+            } else {
+                $query->where('classroom_id', $classroom_id);
+            }
+        }
 
         if ($name !== null) {
             $query->where('name', $name);

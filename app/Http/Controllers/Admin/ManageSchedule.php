@@ -39,7 +39,6 @@ class ManageSchedule extends Controller
 
         $mapel = $subjects->index();
 
-
         return view('admin.schedule', [
             'schedulesArray' => ['data' => $list],
             'classrooms' => $listClassroom,

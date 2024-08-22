@@ -84,6 +84,10 @@ class UserController extends Controller
                 'classroom_id' => $classroom_id,
             ]);
 
+            foreach ($list as $key => $value) {
+                $list[$key]['classroom'] = $classrooms->detail($value['classroom_id']);
+            }
+
             $listClassroom = $classrooms->index([
                 'order_by' => 'asc'
             ]);

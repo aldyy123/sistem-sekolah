@@ -21,11 +21,11 @@
                                             </p>
                                             <p>
                                                 <span>
-                                                    {{ \Carbon\Carbon::parse($schedule['time_start'])->format('h:m') }}
+                                                    {{ \Carbon\Carbon::parse($schedule['time_start'])->format('H:i') }} WIB
                                                 </span>
                                                 <span> - </span>
                                                 <span>
-                                                    {{ \Carbon\Carbon::parse($schedule['time_end'])->format('h:m') }}
+                                                    {{ \Carbon\Carbon::parse($schedule['time_end'])->format('H:i') }} WIB
                                                 </span>
                                             </p>
                                         </div>

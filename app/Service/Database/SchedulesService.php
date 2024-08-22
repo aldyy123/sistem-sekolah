@@ -10,21 +10,12 @@ class SchedulesService
     public function index($filter = [])
     {
         $orderBy = $filter['order_by'] ?? 'DESC';
-        $per_page = $filter['per_page'] ?? 99;
         $classroom_id = $filter['classroom_id'] ?? null;
         $subject_id = $filter['subject_id'] ?? null;
         $days = $filter['days'] ?? null;
 
 
         $query = Schedule::orderBy('days', $orderBy);
-
-        if ($classroom_id !== null) {
-            if (is_array($classroom_id)) {
-                $query->whereIn('classroom_id', $classroom_id);
-            } else {
-                $query->where('classroom_id', $classroom_id);
-            }
-        }
 
         if ($days !== null) {
             $query->where('days', $days);
@@ -33,6 +24,7 @@ class SchedulesService
         if ($subject_id !== null) {
             $query->whereIn('subject_id', $subject_id);
         }
+        
         if ($classroom_id !== null) {
             if (is_array($classroom_id)) {
                 $query->whereIn('classroom_id', $classroom_id);

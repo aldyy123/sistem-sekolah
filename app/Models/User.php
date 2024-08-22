@@ -28,6 +28,10 @@ class User extends Authenticatable
         'update_at',
     ];
 
+    protected $hidden = [
+        'password',
+    ];
+
     public function experience(){
         return $this->hasOne(Experience::class);
     }

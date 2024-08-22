@@ -105,6 +105,7 @@
                                 </div>
                                 <div class="alert alert-success" id="alert-success" role="alert" style="display: none;">
                                 </div>
+
                                 <form>
                                     <div class="row">
                                         {{-- <div class="col-lg-6">
@@ -150,6 +151,7 @@
                                         <button type="submit" class="btn btn-primary">Tambah</button>
                                     </div>
                                 </form>
+
                             </div>
                         </div>
                     </div>

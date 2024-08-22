@@ -109,49 +109,39 @@
 <script src="{{asset('assets/js/index4.js')}}"></script>
 
 <script>
-    const months = [01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12];
-    let teacher_stats = [[1,0], [2,0], [3,0], [4,0], [5,0], [6,0], [7,0], [8,0], [9,0], [10,0], [11,0], [12,0],];
-    let student_stats = [[1,0], [2,0], [3,0], [4,0], [5,0], [6,0], [7,0], [8,0], [9,0], [10,0], [11,0], [12,0],];
+    const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    const teacherStats = months.map(month => [month, 0]);
+    const studentStats = months.map(month => [month, 0]);
 
     const users = {!! json_encode($users) !!};
     let totalAdmin = 0;
     let totalTeacher = 0;
     let totalStudent = 0;
 
-    for (let i = 0; i < users.length; i++) {
-        if (users[i]['role'] === 'ADMIN'){
-            totalAdmin += 1;
+    users.forEach(user => {
+        if (user.role === 'ADMIN') {
+            totalAdmin++;
             $('.total-admin').html(totalAdmin);
-        }
-        if (users[i]['role'] === 'TEACHER'){
-            totalTeacher += 1;
+        } else if (user.role === 'TEACHER') {
+            totalTeacher++;
             $('.total-teacher').html(totalTeacher);
 
-            if (months.includes(parseInt(users[i]['created_at'].substr(5, 2)))) {
-                let digit = 3
-                let month = users[i]['created_at'].substr(5, 2);
-
-                if (month < 10) digit = 2;
-                let totalInMonth = String(teacher_stats[month - 1]).substr(digit);
-
-                teacher_stats[month - 1] = [month, (parseInt(totalInMonth) + 1)];
+            const month = parseInt(user.created_at.substr(5, 2));
+            if (months.includes(month)) {
+                const index = month - 1;
+                teacherStats[index][1]++;
             }
-        }
-        if (users[i]['role'] === 'STUDENT'){
-            totalStudent += 1;
+        } else if (user.role === 'STUDENT') {
+            totalStudent++;
             $('.total-student').html(totalStudent);
-            if (months.includes(parseInt(users[i]['created_at'].substr(5, 2)))) {
-                let digit = 3;
-                let month = parseInt(users[i]['created_at'].substr(5, 2));
 
-                if (month < 10) digit = 2;
-                let totalInMonth = String(student_stats[month - 1]).substr(digit);
-
-                student_stats[month - 1] = [month, (parseInt(totalInMonth) + 1)];
+            const month = parseInt(user.created_at.substr(5, 2));
+            if (months.includes(month)) {
+                const index = month - 1;
+                studentStats[index][1]++;
             }
         }
-    }
-
+    });
 
     c3.generate({
         bindto: '#chart-donut-stats',
@@ -184,13 +174,13 @@
 
 
     $.plot('#chart-flot-stats', [{
-            data: teacher_stats,
+            data: teacherStats,
             color: '#17C2D7',
             lines: {
             fillColor: { colors: [{ opacity: 0 }, { opacity: 0.2 }]}
             }
         },{
-            data: student_stats,
+            data: studentStats,
             color: '#9367B4',
             lines: {
             fillColor: { colors: [{ opacity: 0 }, { opacity: 0.2 }]}

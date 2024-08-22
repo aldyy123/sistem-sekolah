@@ -189,9 +189,9 @@
                 ${role === 'STUDENT' && `<td>${studentData?.nis ?? '-'}</td>`}
                 ${role === 'TEACHER' && `<td>${teacherData?.nip ?? '-'}</td>`}
                 ${(role === 'TEACHER' || 'STUDENT' === role) && `<td>${doubleRole?.degree ?? '-'}</td>`}
-                ${role === 'STUDENT' && `<td>${studentData?.classroom?.code ?? '-'}</td>`}
+                ${role === 'STUDENT' && `<td>${account?.classroom?.code ?? '-'}</td>`}
                 <td>${account.username}</td>
-                ${role === 'STUDENT' && `<td>${studentData?.batch?.start_periode ?? ''} - ${studentData?.batch?.end_periode ?? ''} ${studentData?.batch?.year ?? ''}</td>`}
+                ${role === 'STUDENT' && `<td>${account?.batch?.start_periode ?? ''} - ${studentData?.batch?.end_periode ?? ''} ${studentData?.batch?.year ?? ''}</td>`}
                 <td>${account.status === 1 ? 'Active' : 'Non Active'}</td>
                 <td>
                     <button type="button" class="btn btn-sm btn-default" title="Edit" data-toggle="modal" data-target="#modal-edit-account" onclick="editAccount('${account.id}')">

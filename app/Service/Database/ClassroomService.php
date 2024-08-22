@@ -16,6 +16,13 @@ class ClassroomService
         return $classroom;
     }
 
+    public function detail($classroomId)
+    {
+        $classroom = Classroom::findOrFail($classroomId);
+
+        return $classroom->toArray();
+    }
+
     public function index($filter = []){
         $orderBy = $filter['order_by'] ?? 'desc';
         $per_page = $filter['per_page'] ?? 99;

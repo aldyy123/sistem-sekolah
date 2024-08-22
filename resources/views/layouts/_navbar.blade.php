@@ -20,10 +20,9 @@
             <div id="menu-nav">
                 <ul class="nav navbar-nav">
                     <li class="dropdown">
-                        <a href="javascript:void(0);" class="dropdown-toggle icon-menu" data-toggle="dropdown">
+                        {{-- <a href="javascript:void(0);" class="dropdown-toggle icon-menu" data-toggle="dropdown">
                             <i class="icon-bell"></i>
-
-                        </a>
+                        </a> --}}
                         <ul class="dropdown-menu feeds_widget vivify fadeIn notif">
                             <li class="header blue">Notifications</li>
                             @foreach(DB::table('notif')->where('student_id', Auth::id() )->get() as $item)

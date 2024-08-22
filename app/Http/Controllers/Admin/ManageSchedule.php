@@ -32,12 +32,14 @@ class ManageSchedule extends Controller
         $list = $schedules->index([
             'classroom_id' => $classroom_id,
         ]);
+        dd($list);
 
         $listClassroom = $classrooms->index([
             'order_by' => 'asc'
         ]);
 
         $mapel = $subjects->index();
+
 
         return view('admin.schedule', [
             'schedulesArray' => ['data' => $list],

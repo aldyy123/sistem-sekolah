@@ -8,6 +8,7 @@ use App\Imports\StudentImport;
 use App\Imports\TeacherImport;
 use App\Http\Controllers\Controller;
 use App\Models\Classroom;
+use App\Service\Database\BatchsService;
 use App\Service\Database\ClassroomService;
 use App\Service\Database\ExperienceService;
 use App\Service\Database\StudentService;
@@ -24,8 +25,23 @@ class ManageAccountController extends Controller
     public function getAccount(Request $request)
     {
         $userDB = new UserService;
+        $roleService = null;
 
         $accounts = $userDB->index(['role' => $request->role]);
+
+        foreach ($accounts['data'] as $key => $account) {
+            if ($request->role === 'STUDENT') {
+                $batchService = new BatchsService;
+                $batchData = $batchService->detail($account['student']['batch_id']);
+
+                $classroomService = new ClassroomService;
+                $classroomData = $classroomService->detail($account['student']['classroom_id']);
+
+                $accounts['data'][$key]['batch'] = $batchData;
+                $accounts['data'][$key]['classroom'] = $classroomData;
+            }
+
+        }
 
         return response()->json($accounts);
     }
@@ -59,15 +75,22 @@ class ManageAccountController extends Controller
             $codeClassroom = $classroomService->getClassroomByCode($request->grade);
 
             $studentPayload = [
-                'nis'=> $request->nis,
+                'nis' => $request->nis,
                 'batch_id' => $request->batch,
                 'degree' => $request->degree,
-                'classroom_id'=> $codeClassroom->id,
+                'classroom_id' => $codeClassroom->id,
                 'user_id' => $create->id,
                 'last_education' => $request->last_education,
             ];
             $studentService->create($studentPayload);
-            $experienceDB->create($create->id, ['grade' => Classroom::LEVELGRADE[$request->grade] ?? null, 'experience_point' => 0, 'level' => 0]);
+            $experienceDB->create(
+                $create->id,
+                [
+                    'grade' => Classroom::LEVELGRADE[$request->grade] ?? null,
+                    'experience_point' => 0,
+                    'level' => 0
+                ]
+            );
         }
 
 
@@ -101,7 +124,7 @@ class ManageAccountController extends Controller
             'address' => $request->address,
         ];
 
-        if($request->role === 'STUDENT') {
+        if ($request->role === 'STUDENT') {
             $payloadStudent = [
                 'nis' => $request->nis,
                 'batch_id' => $request->batch,
@@ -124,7 +147,7 @@ class ManageAccountController extends Controller
             return array_merge($payloadUser, $payloadStudent);
         }
 
-        if($request->role === 'TEACHER') {
+        if ($request->role === 'TEACHER') {
             $payloadTeacher = [
                 'nip' => $request->nip,
                 'degree' => $request->degree,
@@ -172,6 +195,7 @@ class ManageAccountController extends Controller
                 'batch_id' => $request->batch,
                 'degree' => $request->degree,
                 'classroom_id' => $classroom->id,
+                'grade' => Classroom::LEVELGRADE[$request->kelas] ?? null,
             ];
 
             $studentService = $studentService->update($request->id, $updateData);

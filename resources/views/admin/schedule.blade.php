@@ -48,6 +48,7 @@
                             <div id="error-header" class="alert" role="alert"></div>
                             <div id="success-header" class="alert" role="alert"></div>
                             <div class="body mt-2">
+
                                 <form id="form-schedule">
                                     @csrf
                                     <div class="row">
@@ -112,6 +113,7 @@
                                         <button type="submit" class="btn btn-primary">Tambah</button>
                                     </div>
                                 </form>
+
                             </div>
                         </div>
                     </div>

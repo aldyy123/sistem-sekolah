@@ -123,6 +123,7 @@
 
             let teacherIds = [];
             $.each(teacherInputs, (i, input) => {
+                if(input.value === "--pilih guru--") return;
                 teacherIds.push(input.value)
             })
 
@@ -176,27 +177,19 @@
 
             // create select
             //appends option
-            for (var i = 0; i < (array.length + 1); i++) {
-                var option = document.createElement("option");
-                if (i === array.length) {
-                    option.setAttribute("hidden", true);
-                    option.setAttribute("selected", true);
-                    option.text = "--pilih guru--";
-                    select.insertBefore(option, select.firstChild);
-                } else {
-                    if (teacher) {
-                        option.id = `option-${teacher.id}`;
-                        option.value = teacher.id;
-                        option.text = teacher.name;
-                    } else {
-                        option.id = `option-${array[i]['id']}`;
-                        option.value = array[i]['id'];
-                        option.text = array[i]['name'];
-                    }
+            array.forEach(teacher => {
+                const option = document.createElement("option");
+                option.id = `option-${teacher.id}`;
+                option.value = teacher.id;
+                option.text = teacher.name;
+                select.appendChild(option);
+            });
 
-                    select.appendChild(option);
-                }
-            }
+            const placeholderOption = document.createElement("option");
+            placeholderOption.setAttribute("hidden", true);
+            placeholderOption.setAttribute("selected", true);
+            placeholderOption.text = "--pilih guru--";
+            select.insertBefore(placeholderOption, select.firstChild);
 
             // create parent element
             var div = document.createElement("div");
